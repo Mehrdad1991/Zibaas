@@ -8,14 +8,30 @@ import AdminPanel from '../components/panels/AdminPanel';
 import { UserRole } from '../types';
 
 const DashboardPage: React.FC<any> = ({ user, onSelectRole }) => {
-  if (!user?.role) return <RoleOnboarding onSelectRole={onSelectRole} />;
+  // 1. Initial State: No User Logged In
+  if (!user) return (
+    <div className="py-20 text-center space-y-6">
+       <div className="text-6xl grayscale">🔒</div>
+       <h2 className="text-3xl font-black text-slate-900">دسترسی محدود شده است</h2>
+       <p className="text-slate-500 font-bold">برای دسترسی به پنل کاربری ابتدا باید وارد حساب خود شوید.</p>
+    </div>
+  );
+
+  // 2. State: Logged in but No Role Selected (First time Onboarding)
+  if (!user.role) return <RoleOnboarding onSelectRole={onSelectRole} />;
   
+  // 3. Dispatcher based on Role (Boundaries)
   switch (user.role) {
-    case UserRole.CUSTOMER: return <CustomerPanel />;
-    case UserRole.TECHNICIAN: return <TechnicianPanel />;
-    case UserRole.CLINIC_ADMIN: return <ClinicPanel />;
-    case UserRole.SUPER_ADMIN: return <AdminPanel />;
-    default: return <CustomerPanel />;
+    case UserRole.CUSTOMER: 
+      return <CustomerPanel />;
+    case UserRole.TECHNICIAN: 
+      return <TechnicianPanel />;
+    case UserRole.CLINIC_ADMIN: 
+      return <ClinicPanel />;
+    case UserRole.SUPER_ADMIN: 
+      return <AdminPanel />;
+    default: 
+      return <CustomerPanel />;
   }
 };
 

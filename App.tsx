@@ -2,11 +2,12 @@
 import React, { useState } from 'react';
 import { ROUTES, RoutePath } from './routes';
 import MainLayout from './layouts/MainLayout';
+import DashboardLayout from './layouts/DashboardLayout';
+import BookingLayout from './Booking/BookingLayout';
 import Auth from './components/Auth';
 import LiveAdvisor from './components/LiveAdvisor';
 import AIChatbot from './components/AIChatbot';
 import Breadcrumbs from './components/Breadcrumbs';
-import ServiceBookingModal from './components/ServiceBookingModal';
 import { Clinic, Service, Technician, UserRole, CartItem, Product } from './types';
 
 const App: React.FC = () => {
@@ -20,9 +21,8 @@ const App: React.FC = () => {
   const [selectedRoom, setSelectedRoom] = useState<any>(null);
   const [selectedTech, setSelectedTech] = useState<Technician | null>(null);
 
-  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [serviceToBook, setServiceToBook] = useState<Service | null>(null);
-  const [providerToBook, setProviderToBook] = useState<Clinic | Technician | null>(null);
+  // Booking Step State
+  const [bookingStep, setBookingStep] = useState(1);
 
   const route = ROUTES[activeTab] || ROUTES['home'];
   const PageComponent = route.component;
@@ -42,43 +42,71 @@ const App: React.FC = () => {
   const handleSelectTech = (t: Technician) => {
     setSelectedTech(t);
     setActiveTab('tech-profile');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectClinic = (c: Clinic) => {
     setSelectedClinic(c);
     setActiveTab('clinic');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const content = (
-    <div className={activeTab === 'home' ? '' : 'max-w-7xl mx-auto w-full px-4 mb-24'}>
-      {activeTab !== 'home' && (
-        <Breadcrumbs 
-          activeTab={activeTab} 
-          selectedClinic={selectedClinic} 
-          selectedRoom={selectedRoom} 
-          selectedTech={selectedTech} 
-          onNavigate={setActiveTab} 
-        />
+  const handleLogout = () => {
+    setUser(null);
+    setActiveTab('home');
+  };
+
+  const handleBookService = () => {
+    setBookingStep(1);
+    setActiveTab('booking');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const pageProps = {
+    onTabChange: setActiveTab,
+    user: user,
+    onSelectClinic: handleSelectClinic,
+    onSelectTech: handleSelectTech,
+    onShowLiveAdvisor: () => setShowLiveAdvisor(true),
+    selectedClinic: selectedClinic,
+    selectedTech: selectedTech,
+    selectedRoom: selectedRoom,
+    onViewRoomDetail: (r: any, c: any) => { setSelectedRoom(r); setSelectedClinic(c); setActiveTab('rental'); },
+    cart: cart,
+    onAddToCart: handleAddToCart,
+    onUpdateQuantity: updateCartQuantity,
+    onBookService: handleBookService,
+    onLogin: (phone: string) => { setUser({ phone, role: null }); setShowAuth(false); },
+    onSelectRole: (role: UserRole) => { if (user) { setUser({ ...user, role }); setActiveTab('dashboard'); } },
+    bookingStep,
+    setBookingStep
+  };
+
+  const pageContent = (
+    <div className={activeTab === 'home' ? '' : 'w-full'}>
+      {route.layout === 'main' && activeTab !== 'home' && (
+        <div className="max-w-7xl mx-auto px-6">
+          <Breadcrumbs 
+            activeTab={activeTab} 
+            selectedClinic={selectedClinic} 
+            selectedRoom={selectedRoom} 
+            selectedTech={selectedTech} 
+            onNavigate={setActiveTab} 
+          />
+        </div>
       )}
-      <PageComponent 
-        onTabChange={setActiveTab}
-        user={user}
-        onSelectClinic={handleSelectClinic}
-        onSelectTech={handleSelectTech}
-        onShowLiveAdvisor={() => setShowLiveAdvisor(true)}
-        selectedClinic={selectedClinic}
-        selectedTech={selectedTech}
-        selectedRoom={selectedRoom}
-        onViewRoomDetail={(r: any, c: any) => { setSelectedRoom(r); setSelectedClinic(c); setActiveTab('rental'); }}
-        cart={cart}
-        onAddToCart={handleAddToCart}
-        onUpdateQuantity={updateCartQuantity}
-        onBookService={(s: Service, p: Clinic | Technician) => { setServiceToBook(s); setProviderToBook(p); setIsBookingModalOpen(true); }}
-        onLogin={(phone: string) => { setUser({ phone, role: null }); setShowAuth(false); }}
-        onSelectRole={(role: UserRole) => { if (user) { setUser({ ...user, role }); setActiveTab('dashboard'); } }}
-      />
+      <PageComponent {...pageProps} />
     </div>
   );
+
+  // Render Logic
+  if (activeTab === 'booking') {
+    return (
+      <BookingLayout currentStep={bookingStep} onCancel={() => { setActiveTab('home'); setBookingStep(1); }}>
+        {pageContent}
+      </BookingLayout>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -90,28 +118,23 @@ const App: React.FC = () => {
           user={user}
           onAuthOpen={() => setShowAuth(true)}
         >
-          {content}
+          {pageContent}
         </MainLayout>
       ) : route.layout === 'dashboard' ? (
-        <div className="bg-gray-50 min-h-screen">
-          <nav className="bg-white border-b px-8 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
-             <button onClick={() => setActiveTab('home')} className="text-pink-600 font-black flex items-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                بازگشت به سایت
-             </button>
-             <h1 className="font-black text-slate-800">پنل مدیریتی Zibaas</h1>
-          </nav>
-          <div className="max-w-7xl mx-auto px-4 py-8">
-            {content}
-          </div>
-        </div>
-      ) : content}
-
-      {showAuth && <Auth onClose={() => setShowAuth(false)} onLogin={(phone) => { setUser({ phone, role: null }); setShowAuth(false); }} />}
-      {showLiveAdvisor && <LiveAdvisor onClose={() => setShowLiveAdvisor(false)} />}
-      {isBookingModalOpen && serviceToBook && providerToBook && (
-        <ServiceBookingModal service={serviceToBook} provider={providerToBook} onClose={() => setIsBookingModalOpen(false)} onConfirm={() => setIsBookingModalOpen(false)} />
+        <DashboardLayout 
+          user={user} 
+          activeTab={activeTab} 
+          onTabChange={setActiveTab} 
+          onLogout={handleLogout}
+        >
+          {pageContent}
+        </DashboardLayout>
+      ) : (
+        pageContent
       )}
+
+      {showAuth && <Auth onClose={() => setShowAuth(false)} onLogin={pageProps.onLogin} />}
+      {showLiveAdvisor && <LiveAdvisor onClose={() => setShowLiveAdvisor(false)} />}
       <AIChatbot />
     </div>
   );

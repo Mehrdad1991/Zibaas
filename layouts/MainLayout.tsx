@@ -24,6 +24,15 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     return n.toString().replace(/\d/g, (x) => farsiDigits[parseInt(x)]);
   };
 
+  const navItems = [
+    { id: 'home', label: 'صفحه اصلی' },
+    { id: 'booking', label: 'خدمات زیبایی' },
+    { id: 'tech-directory', label: 'متخصصین' },
+    { id: 'store', label: 'تجهیزات پزشکی' },
+    { id: 'surgery', label: 'کلینیک و اتاق عمل' },
+    { id: 'rental', label: 'فضای کاری' }
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-[#FAFBFF] text-slate-900 overflow-x-hidden">
       {/* Premium Navigation */}
@@ -45,18 +54,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({
           </div>
           
           <div className="flex items-center gap-12">
-            <div className="hidden lg:flex gap-10 items-center">
-              {[
-                { id: 'home', label: 'صفحه اصلی' },
-                { id: 'booking', label: 'خدمات زیبایی' },
-                { id: 'store', label: 'تجهیزات پزشکی' },
-                { id: 'surgery', label: 'کلینیک و اتاق عمل' },
-                { id: 'rental', label: 'فضای کاری' }
-              ].map(item => (
+            <div className="hidden lg:flex gap-8 items-center">
+              {navItems.map(item => (
                 <button 
                   key={item.id} 
                   onClick={() => onTabChange(item.id)} 
-                  className={`text-sm font-bold transition-all relative group py-2 ${activeTab === item.id ? 'text-pink-600' : 'text-slate-500 hover:text-slate-900'}`}
+                  className={`text-[13px] font-black transition-all relative group py-2 ${activeTab === item.id ? 'text-pink-600' : 'text-slate-500 hover:text-slate-900'}`}
                 >
                   {item.label}
                   {activeTab === item.id && (
