@@ -1,188 +1,154 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Service, Clinic, Technician } from '../types';
+import Calendar from './Calendar';
 
 interface ServiceBookingModalProps {
   service: Service;
   provider: Clinic | Technician;
   onClose: () => void;
-  onConfirm: (bookingDetails: { date: string; time: string; notes: string }) => void;
+  onConfirm: (details: any) => void;
 }
 
 const ServiceBookingModal: React.FC<ServiceBookingModalProps> = ({ service, provider, onClose, onConfirm }) => {
-  const [selectedDate, setSelectedDate] = useState('۱۴۰۲/۰۸/۲۰');
-  const [selectedTime, setSelectedTime] = useState('');
-  const [notes, setNotes] = useState('');
+  const [step, setStep] = useState(1);
+  const [bookingData, setBookingData] = useState({
+    date: '',
+    time: '',
+    notes: '',
+    patientName: '',
+  });
 
-  // Helper to convert numbers to Persian digits
   const toPersianDigits = (n: number | string) => {
     const farsiDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
     return n.toString().replace(/\d/g, (x) => farsiDigits[parseInt(x)]);
   };
 
-  // Logic to generate slots based on service duration
-  const dynamicSlots = useMemo(() => {
-    const slots = [];
-    const startHour = 8;
-    const endHour = 20;
-    const durationMins = service.duration;
-
-    if (durationMins >= 420) { // More than 7 hours = Full Day or Half Day blocks
-      if (durationMins >= 480) {
-        slots.push({ start: '۰۸:۰۰', end: toPersianDigits(Math.floor(8 + durationMins/60)) + ':۰۰', label: 'نوبت تمام‌روز' });
-      } else {
-        slots.push({ start: '۰۸:۰۰', end: toPersianDigits(Math.floor(8 + durationMins/60)) + ':۰۰', label: 'شیفت صبح' });
-        slots.push({ start: '۱۴:۰۰', end: toPersianDigits(Math.floor(14 + durationMins/60)) + ':۰۰', label: 'شیفت عصر' });
-      }
-    } else if (durationMins >= 180) { // 3 to 7 hours = Multi-hour blocks
-      let current = startHour;
-      while (current + durationMins / 60 <= endHour) {
-        const end = current + durationMins / 60;
-        slots.push({ 
-          start: `${toPersianDigits(current.toString().padStart(2, '0'))}:۰۰`, 
-          end: `${toPersianDigits(Math.floor(end).toString().padStart(2, '0'))}:${toPersianDigits((end % 1 * 60).toString().padStart(2, '0'))}`,
-          label: 'نوبت جراحی/تخصصی'
-        });
-        current += Math.max(durationMins / 60, 4); // At least 4 hours between long starts
-      }
-    } else { // Less than 3 hours = Hourly blocks
-      let current = startHour;
-      while (current + durationMins / 60 <= endHour) {
-        const startTime = `${toPersianDigits(current.toString().padStart(2, '0'))}:۰۰`;
-        slots.push({ start: startTime, label: '' });
-        current += durationMins / 60 >= 1 ? 1 : 0.5; // Increments of 1h or 30m
-      }
-    }
-    return slots;
-  }, [service.duration]);
-
-  const dates = [
-    { label: 'شنبه', day: '۲۰', month: 'آبان' },
-    { label: 'یکشنبه', day: '۲۱', month: 'آبان' },
-    { label: 'دوشنبه', day: '۲۲', month: 'آبان' },
-    { label: 'سه‌شنبه', day: '۲۳', month: 'آبان' },
-  ];
+  const handleNext = () => setStep(s => s + 1);
+  const handleBack = () => setStep(s => s - 1);
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-300">
-      <div className="bg-white w-full max-w-2xl rounded-[50px] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col max-h-[95vh]">
-        {/* Header */}
-        <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
-          <div>
-            <h3 className="text-2xl font-black text-gray-900">رزرو {service.name}</h3>
-            <div className="flex items-center gap-2 mt-1">
-               <span className="bg-pink-100 text-pink-600 px-2 py-0.5 rounded-lg text-[10px] font-black">
-                 زمان مورد نیاز: {toPersianDigits(service.duration)} دقیقه
-               </span>
-               <span className="text-xs text-gray-400 font-medium">| توسط {provider.name}</span>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-300">
+      <div className="bg-white w-full max-w-2xl rounded-[40px] md:rounded-[60px] overflow-hidden shadow-3xl animate-in zoom-in-95 duration-300 flex flex-col max-h-[90vh]">
+        
+        {/* Stepper Header */}
+        <div className="p-8 border-b border-slate-50 bg-slate-50/50 flex flex-col gap-6">
+          <div className="flex justify-between items-center">
+            <button onClick={onClose} className="text-slate-400 hover:text-pink-600 transition-colors p-2">
+              <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+            <div className="text-right">
+              <h3 className="text-xl md:text-2xl font-black text-slate-900 tracking-tight">رزرو هوشمند {service.name}</h3>
+              <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1">Provider: {provider.name}</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-pink-600 transition-colors p-2">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          
+          <div className="flex justify-center items-center gap-4">
+             {[1, 2, 3].map(i => (
+               <React.Fragment key={i}>
+                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black transition-all ${step >= i ? 'bg-pink-600 text-white shadow-lg shadow-pink-200' : 'bg-slate-100 text-slate-400'}`}>
+                   {toPersianDigits(i)}
+                 </div>
+                 {i < 3 && <div className={`h-1 flex-1 rounded-full ${step > i ? 'bg-pink-600' : 'bg-slate-100'}`}></div>}
+               </React.Fragment>
+             ))}
+          </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-8 space-y-8 no-scrollbar">
-          {/* Date Selection */}
-          <section className="space-y-4">
-            <h4 className="text-sm font-black text-gray-400 pr-2">۱. انتخاب تاریخ</h4>
-            <div className="grid grid-cols-4 gap-3">
-              {dates.map((d, i) => (
-                <button
-                  key={i}
-                  onClick={() => setSelectedDate(`۱۴۰۲/۰۸/${d.day}`)}
-                  className={`flex flex-col items-center p-4 rounded-3xl border-2 transition-all ${
-                    selectedDate.includes(d.day)
-                      ? 'border-pink-600 bg-pink-50 text-pink-600 shadow-lg shadow-pink-100'
-                      : 'border-gray-100 hover:border-pink-200 text-gray-400'
-                  }`}
-                >
-                  <span className="text-[10px] font-bold">{d.label}</span>
-                  <span className="text-xl font-black">{toPersianDigits(d.day)}</span>
-                  <span className="text-[10px] opacity-60">{d.month}</span>
-                </button>
-              ))}
+        <div className="flex-1 overflow-y-auto p-8 md:p-12 no-scrollbar">
+          {step === 1 && (
+            <div className="animate-in slide-in-from-right-4 duration-300">
+              <Calendar 
+                duration={service.duration} 
+                onSelectSlot={(date, time) => setBookingData({...bookingData, date, time})} 
+              />
             </div>
-          </section>
+          )}
 
-          {/* Dynamic Time Slot Selection */}
-          <section className="space-y-4">
-            <h4 className="text-sm font-black text-gray-400 pr-2">۲. انتخاب سانس (بر اساس مدت زمان خدمت)</h4>
-            <div className={`grid gap-3 ${service.duration >= 180 ? 'grid-cols-1' : 'grid-cols-3 md:grid-cols-4'}`}>
-              {dynamicSlots.map((slot, i) => (
-                <button
-                  key={i}
-                  onClick={() => setSelectedTime(slot.start)}
-                  className={`relative p-4 rounded-3xl border-2 text-right transition-all flex flex-col justify-center ${
-                    selectedTime === slot.start
-                      ? 'border-pink-600 bg-pink-50 text-pink-600 shadow-md'
-                      : 'border-gray-50 bg-gray-50 text-gray-500 hover:border-pink-200'
-                  }`}
-                >
-                  <div className="flex justify-between items-center w-full">
-                    <span className="text-lg font-black">{slot.start}</span>
-                    {slot.end && <span className="text-[10px] opacity-60">تا {slot.end}</span>}
-                  </div>
-                  {slot.label && (
-                    <span className={`text-[9px] font-bold mt-1 ${selectedTime === slot.start ? 'text-pink-400' : 'text-gray-400'}`}>
-                      {slot.label}
-                    </span>
-                  )}
-                  {selectedTime === slot.start && (
-                    <div className="absolute -top-2 -left-2 bg-pink-600 text-white p-1 rounded-full shadow-lg">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
+          {step === 2 && (
+            <div className="space-y-8 animate-in slide-in-from-right-4 duration-300 text-right">
+              <h4 className="text-lg font-black text-slate-900 border-r-4 border-pink-600 pr-3">اطلاعات تکمیلی مراجع</h4>
+              <div className="space-y-6">
+                 <div className="space-y-2">
+                    <label className="text-xs font-black text-slate-400 pr-2">نام و نام خانوادگی بیمار</label>
+                    <input 
+                      type="text" 
+                      className="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 font-bold focus:ring-2 focus:ring-pink-500 text-right"
+                      placeholder="نام کامل را وارد کنید..."
+                      value={bookingData.patientName}
+                      onChange={(e) => setBookingData({...bookingData, patientName: e.target.value})}
+                    />
+                 </div>
+                 <div className="space-y-2">
+                    <label className="text-xs font-black text-slate-400 pr-2">توضیحات یا سوابق پزشکی مرتبط (اختیاری)</label>
+                    <textarea 
+                      className="w-full bg-slate-50 border-none rounded-2xl px-6 py-4 font-bold focus:ring-2 focus:ring-pink-500 text-right h-32"
+                      placeholder="اگر آلرژی خاصی دارید یا نکته‌ای برای متخصص وجود دارد..."
+                      value={bookingData.notes}
+                      onChange={(e) => setBookingData({...bookingData, notes: e.target.value})}
+                    />
+                 </div>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="space-y-8 animate-in slide-in-from-right-4 duration-300 text-right">
+              <h4 className="text-lg font-black text-slate-900 border-r-4 border-pink-600 pr-3">خلاصه رزرو و تایید نهایی</h4>
+              <div className="bg-slate-50 rounded-[32px] p-8 space-y-6 border border-slate-100">
+                 <div className="flex justify-between items-center">
+                    <span className="text-slate-900 font-black">{service.name}</span>
+                    <span className="text-slate-400 text-xs font-bold">خدمت انتخاب شده</span>
+                 </div>
+                 <div className="flex justify-between items-center">
+                    <span className="text-slate-900 font-black">{bookingData.date} - ساعت {bookingData.time}</span>
+                    <span className="text-slate-400 text-xs font-bold">زمان نوبت</span>
+                 </div>
+                 <div className="flex justify-between items-center">
+                    <span className="text-slate-900 font-black">{bookingData.patientName}</span>
+                    <span className="text-slate-400 text-xs font-bold">نام مراجع</span>
+                 </div>
+                 <div className="pt-6 border-t border-slate-200 flex justify-between items-center">
+                    <div className="text-right">
+                       <p className="text-2xl font-black text-pink-600">{toPersianDigits(service.price.toLocaleString())} تومان</p>
+                       <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Final Amount to Pay</p>
                     </div>
-                  )}
-                </button>
-              ))}
+                    <div className="flex items-center gap-2 text-green-600">
+                       <span className="text-xs font-black">امنیت کامل اطلاعات</span>
+                       <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" /></svg>
+                    </div>
+                 </div>
+              </div>
+              <div className="p-6 bg-blue-50 rounded-2xl border border-blue-100 flex items-start gap-4">
+                 <div className="text-xl">💳</div>
+                 <p className="text-xs text-blue-800 leading-relaxed font-bold">
+                    در مرحله بعد شما به درگاه پرداخت شاپرک متصل خواهید شد. هزینه پرداختی شامل ضمانت بازگشت وجه زیباست در صورت لغو تا ۲۴ ساعت قبل می‌باشد.
+                 </p>
+              </div>
             </div>
-            {dynamicSlots.length === 0 && (
-              <p className="text-center py-8 text-gray-400 font-bold bg-gray-50 rounded-3xl border-2 border-dashed border-gray-100">
-                متاسفانه برای این تاریخ نوبت خالی با این مدت زمان یافت نشد.
-              </p>
-            )}
-          </section>
-
-          {/* Notes */}
-          <section className="space-y-4">
-            <h4 className="text-sm font-black text-gray-400 pr-2">۳. ملاحظات پزشکی یا توضیحات</h4>
-            <textarea
-              placeholder="اگر حساسیت دارویی دارید یا نکته خاصی برای جراح/متخصص وجود دارد بنویسید..."
-              className="w-full bg-gray-50 border-none rounded-3xl px-6 py-4 text-sm font-medium focus:ring-2 focus:ring-pink-500 h-24 text-right"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            />
-          </section>
-
-          {/* Summary Box */}
-          <div className="bg-gray-900 rounded-[35px] p-6 text-white flex justify-between items-center shadow-xl border border-gray-800">
-            <div>
-              <p className="text-[10px] opacity-60 mb-1">هزینه نهایی خدمت</p>
-              <p className="text-2xl font-black">{toPersianDigits(service.price.toLocaleString())} <span className="text-xs font-normal opacity-70">تومان</span></p>
-            </div>
-            <div className="text-left">
-              <p className="text-[10px] opacity-60 mb-1">تعهد زمانی</p>
-              <p className="text-lg font-black">{toPersianDigits(service.duration)} دقیقه</p>
-            </div>
-          </div>
+          )}
         </div>
 
-        {/* Footer */}
-        <div className="p-8 bg-gray-50/50 border-t border-gray-100">
-          <button
-            disabled={!selectedTime}
-            onClick={() => onConfirm({ date: selectedDate, time: selectedTime, notes })}
-            className={`w-full py-5 rounded-[25px] font-black text-lg shadow-xl transition-all ${
-              selectedTime 
-                ? 'bg-pink-600 text-white hover:bg-pink-700 hover:scale-[1.02] shadow-pink-200' 
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+        {/* Footer Actions */}
+        <div className="p-8 md:p-10 border-t border-slate-50 bg-slate-50/30 flex gap-4">
+          {step > 1 && (
+            <button 
+              onClick={handleBack}
+              className="flex-1 py-4 md:py-5 bg-white border border-slate-200 text-slate-500 rounded-3xl font-black text-sm md:text-lg hover:bg-slate-50 transition-all"
+            >
+              مرحله قبل
+            </button>
+          )}
+          <button 
+            disabled={(step === 1 && (!bookingData.date || !bookingData.time)) || (step === 2 && !bookingData.patientName)}
+            onClick={step === 3 ? () => onConfirm(bookingData) : handleNext}
+            className={`flex-[2] py-4 md:py-5 rounded-3xl font-black text-sm md:text-lg shadow-xl transition-all ${
+              (step === 1 && (!bookingData.date || !bookingData.time)) || (step === 2 && !bookingData.patientName)
+                ? 'bg-slate-100 text-slate-300 cursor-not-allowed'
+                : 'bg-pink-600 text-white shadow-pink-100 hover:bg-pink-700 hover:scale-[1.02] active:scale-95'
             }`}
           >
-            تایید و ثبت نهایی رزرو
+            {step === 3 ? 'اتصال به درگاه و پرداخت' : 'تایید و ادامه'}
           </button>
         </div>
       </div>

@@ -1,12 +1,36 @@
 
-import { GoogleGenAI, Type, GenerateContentResponse } from "@google/genai";
+import { GoogleGenAI, Type, GenerateContentResponse, Modality } from "@google/genai";
 import { SYSTEM_INSTRUCTION } from "../constants";
 import { ChatMessage } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Helper to create a fresh AI instance for key selection compliance
+const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
+
+// Fix: Added generateProfessionalBio for technicians
+export const generateProfessionalBio = async (name: string, specialty: string, experienceYears: string) => {
+  try {
+    const ai = getAI();
+    const prompt = `Write a professional and engaging bio for a beauty technician on the Zibaas platform.
+    Name: ${name}
+    Specialty: ${specialty}
+    Experience: ${experienceYears} years
+    The bio should sound trustworthy, modern, and inviting. 
+    Respond exclusively in Persian (Farsi). Keep it under 150 words.`;
+    
+    const response = await ai.models.generateContent({
+      model: "gemini-3-flash-preview",
+      contents: prompt,
+    });
+    return response.text;
+  } catch (error) {
+    console.error("Bio Generation Error:", error);
+    return null;
+  }
+};
 
 export const getAIRecommendation = async (userInput: string) => {
   try {
+    const ai = getAI();
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: userInput,
@@ -21,30 +45,30 @@ export const getAIRecommendation = async (userInput: string) => {
   }
 };
 
-export const generateProfessionalBio = async (techName: string, specialty: string, experience: string) => {
-  try {
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: `Generate a professional and attractive Persian bio for a beauty technician named ${techName} specializing in ${specialty} with ${experience} years of experience. Use a friendly but professional tone.`,
-    });
-    return response.text;
-  } catch (error) {
-    return "خطا در تولید متن هوشمند.";
-  }
-};
-
 export const chatWithAI = async (messages: ChatMessage[]) => {
   try {
+    const ai = getAI();
     const chat = ai.chats.create({
       model: "gemini-3-flash-preview",
       config: {
-        systemInstruction: SYSTEM_INSTRUCTION,
+        systemInstruction: SYSTEM_INSTRUCTION + "\nUse Google Search to find current beauty trends, prices, and top doctors in Iran if relevant.",
+        tools: [{ googleSearch: {} }],
       },
     });
 
     const lastMessage = messages[messages.length - 1].text;
     const response: GenerateContentResponse = await chat.sendMessage({ message: lastMessage });
-    return response.text;
+    
+    // Extract grounding URLs if any
+    const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
+    const urls = chunks.map((c: any) => c.web?.uri).filter(Boolean);
+    
+    let text = response.text || "";
+    if (urls.length > 0) {
+      text += "\n\nمنابع بیشتر:\n" + Array.from(new Set(urls)).map(url => `- ${url}`).join('\n');
+    }
+    
+    return text;
   } catch (error) {
     console.error("AI Chat Error:", error);
     return "متاسفانه مشکلی در ارتباط با دستیار هوشمند پیش آمده است.";
@@ -53,15 +77,13 @@ export const chatWithAI = async (messages: ChatMessage[]) => {
 
 export const analyzeBeautyConsultation = async (imageBase64: string) => {
   try {
-    // Modified prompt to focus on AESTHETICS and HARMONY to avoid medical safety triggers
+    const ai = getAI();
     const prompt = `Act as an expert Aesthetic Consultant and Stylist for the Zibaas beauty platform. 
     Analyze this photo for aesthetic proportions and facial harmony.
-    1. Evaluate facial geometry, symmetry, and the 'Golden Ratio' of features (eyes, nose, chin).
-    2. Provide a detailed analysis of facial angles and how they contribute to overall attractiveness.
-    3. Suggest aesthetic enhancements such as skincare routines, facial treatments (facials, microdermabrasion), or cosmetic services (fillers, contouring) that would enhance the user's natural beauty.
-    4. Focus on 'Visual Improvement' and 'Styling' rather than medical diagnosis.
-    5. Be very positive, detailed, and use a professional beauty-consultant tone.
-    Respond exclusively in Persian (Farsi) with a professional and encouraging structure. Avoid mentioning that you are an AI model or that you cannot give advice.`;
+    1. Evaluate facial geometry, symmetry, and features.
+    2. Suggest aesthetic enhancements such as skincare routines or cosmetic services (fillers, contouring).
+    3. Focus on 'Visual Improvement' and 'Styling'.
+    Respond exclusively in Persian (Farsi).`;
     
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image',
@@ -70,39 +92,105 @@ export const analyzeBeautyConsultation = async (imageBase64: string) => {
           { inlineData: { data: imageBase64, mimeType: 'image/jpeg' } },
           { text: prompt }
         ]
-      },
-      config: {
-        // Lowering safety threshold for these specific queries to allow aesthetic advice
-        temperature: 0.7,
-        topP: 0.95,
       }
     });
     return response.text;
   } catch (error) {
     console.error("Beauty Consultation Error:", error);
-    return "سیستم تحلیل در حال حاضر با محدودیت روبرو شده است. لطفا مطمئن شوید عکس شما کاملاً واضح، تمام‌رخ و با نور مناسب است و دوباره تلاش کنید.";
+    return "سیستم تحلیل در حال حاضر با محدودیت روبرو شده است.";
   }
 };
 
-export const analyzeBeforeAfter = async (beforeImageBase64: string, afterImageBase64: string) => {
+// Fix: Added analyzeBeforeAfter to compare two photos
+export const analyzeBeforeAfter = async (beforeBase64: string, afterBase64: string) => {
   try {
-    const prompt = `As a professional aesthetic observer, compare these two images (before and after). 
-    Highlight the positive aesthetic changes, improvements in facial contours, and the success of the treatment. 
-    Focus on the visual result and harmony. Respond in Persian with an encouraging tone.`;
+    const ai = getAI();
+    const prompt = `Analyze these two photos of a patient: the first is 'Before' and the second is 'After' an aesthetic procedure. 
+    1. Compare the features and identify the changes.
+    2. Evaluate the naturalness and success of the results.
+    3. Provide professional feedback on the transformation.
+    Respond exclusively in Persian (Farsi) in a supportive and professional tone for the Zibaas platform.`;
     
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image',
       contents: {
         parts: [
-          { inlineData: { data: beforeImageBase64, mimeType: 'image/jpeg' } },
-          { inlineData: { data: afterImageBase64, mimeType: 'image/jpeg' } },
+          { inlineData: { data: beforeBase64, mimeType: 'image/jpeg' } },
+          { inlineData: { data: afterBase64, mimeType: 'image/jpeg' } },
           { text: prompt }
         ]
       }
     });
     return response.text;
   } catch (error) {
-    console.error("Image Analysis Error:", error);
-    return "خطا در تحلیل تصاویر. لطفا دوباره تلاش کنید.";
+    console.error("Before/After Analysis Error:", error);
+    return "سیستم تحلیل قبل و بعد در حال حاضر با مشکل مواجه شده است.";
+  }
+};
+
+export const generateResultSimulation = async (prompt: string, imageBase64: string) => {
+  try {
+    const ai = getAI();
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash-image',
+      contents: {
+        parts: [
+          { inlineData: { data: imageBase64, mimeType: 'image/jpeg' } },
+          { text: `Based on this photo, generate a high-quality visualization of the result of: ${prompt}. Focus on a natural and beautiful outcome.` }
+        ]
+      },
+      config: {
+        imageConfig: { aspectRatio: "1:1" }
+      }
+    });
+
+    for (const part of response.candidates?.[0]?.content.parts || []) {
+      if (part.inlineData) {
+        return `data:image/png;base64,${part.inlineData.data}`;
+      }
+    }
+    return null;
+  } catch (error) {
+    console.error("Simulation Generation Error:", error);
+    return null;
+  }
+};
+
+export const generateBeautyVideo = async (prompt: string, imageBase64?: string) => {
+  try {
+    const ai = getAI();
+    const config: any = {
+      model: 'veo-3.1-fast-generate-preview',
+      prompt: `Cinematic beauty transformation video: ${prompt}. Soft lighting, 4k detail, elegant atmosphere.`,
+      config: {
+        numberOfVideos: 1,
+        resolution: '720p',
+        aspectRatio: '16:9'
+      }
+    };
+
+    if (imageBase64) {
+      config.image = {
+        imageBytes: imageBase64,
+        mimeType: 'image/jpeg'
+      };
+    }
+
+    let operation = await ai.models.generateVideos(config);
+    
+    while (!operation.done) {
+      await new Promise(resolve => setTimeout(resolve, 10000));
+      operation = await ai.operations.getVideosOperation({ operation: operation });
+    }
+
+    const downloadLink = operation.response?.generatedVideos?.[0]?.video?.uri;
+    if (!downloadLink) return null;
+
+    const response = await fetch(`${downloadLink}&key=${process.env.API_KEY}`);
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    console.error("Video Generation Error:", error);
+    throw error;
   }
 };

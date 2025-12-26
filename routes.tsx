@@ -1,51 +1,52 @@
 
-import React, { Suspense, lazy } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import MainLayout from './layouts/MainLayout.tsx';
-import DashboardLayout from './layouts/DashboardLayout.tsx';
+import React from 'react';
+import Home from './pages/Home';
+import SearchResults from './pages/SearchResults';
+import ClinicProfilePage from './pages/ClinicProfilePage';
+import TechnicianProfilePage from './pages/TechnicianProfilePage';
+import BookingPage from './pages/BookingPage';
+import DashboardPage from './pages/DashboardPage';
+import AuthPage from './pages/AuthPage';
+import StorePage from './pages/StorePage';
+import SurgeryPage from './pages/SurgeryPage';
+import RentalPage from './pages/RentalPage';
+import AnalysisPage from './pages/AnalysisPage';
+import TechnicianDirectoryPage from './pages/TechnicianDirectoryPage';
+import TechnicianJoinPage from './pages/TechnicianJoinPage';
 
-// Lazy loading pages for better performance
-const Home = lazy(() => import('./pages/Home.tsx'));
-const SearchResults = lazy(() => import('./pages/SearchResults.tsx'));
-const ClinicDetail = lazy(() => import('./pages/ClinicDetail.tsx'));
-const TechnicianDetail = lazy(() => import('./pages/TechnicianDetail.tsx'));
-const BookingPage = lazy(() => import('./pages/Booking/BookingPage.tsx'));
-const Login = lazy(() => import('./pages/Auth/Login.tsx'));
-const Signup = lazy(() => import('./pages/Auth/Signup.tsx'));
+export type RoutePath = 
+  | 'home' 
+  | 'search' 
+  | 'clinic' 
+  | 'tech-profile' 
+  | 'booking' 
+  | 'dashboard' 
+  | 'auth' 
+  | 'store' 
+  | 'surgery' 
+  | 'rental' 
+  | 'analysis'
+  | 'tech-directory'
+  | 'tech-join';
 
-// Dashboard Pages
-const UserDashboard = lazy(() => import('./pages/Dashboard/UserDashboard.tsx'));
-const ClinicDashboard = lazy(() => import('./pages/Dashboard/ClinicDashboard.tsx'));
-const TechnicianDashboard = lazy(() => import('./pages/Dashboard/TechnicianDashboard.tsx'));
+export interface RouteConfig {
+  path: RoutePath;
+  component: React.FC<any>;
+  layout: 'main' | 'dashboard' | 'none';
+}
 
-const AppRoutes: React.FC = () => {
-  return (
-    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">در حال بارگذاری...</div>}>
-      <Routes>
-        {/* Public Routes */}
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/search" element={<SearchResults />} />
-          <Route path="/clinic/:id" element={<ClinicDetail />} />
-          <Route path="/technician/:id" element={<TechnicianDetail />} />
-          <Route path="/booking" element={<BookingPage />} />
-          <Route path="/auth/login" element={<Login />} />
-          <Route path="/auth/signup" element={<Signup />} />
-        </Route>
-
-        {/* Protected Dashboard Routes */}
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route path="user" element={<UserDashboard />} />
-          <Route path="clinic" element={<ClinicDashboard />} />
-          <Route path="technician" element={<TechnicianDashboard />} />
-          <Route index element={<Navigate to="user" replace />} />
-        </Route>
-
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Suspense>
-  );
+export const ROUTES: Record<RoutePath, RouteConfig> = {
+  home: { path: 'home', component: Home, layout: 'main' },
+  search: { path: 'search', component: SearchResults, layout: 'main' },
+  clinic: { path: 'clinic', component: ClinicProfilePage, layout: 'main' },
+  'tech-profile': { path: 'tech-profile', component: TechnicianProfilePage, layout: 'main' },
+  booking: { path: 'booking', component: BookingPage, layout: 'main' },
+  dashboard: { path: 'dashboard', component: DashboardPage, layout: 'dashboard' },
+  auth: { path: 'auth', component: AuthPage, layout: 'none' },
+  store: { path: 'store', component: StorePage, layout: 'main' },
+  surgery: { path: 'surgery', component: SurgeryPage, layout: 'main' },
+  rental: { path: 'rental', component: RentalPage, layout: 'main' },
+  analysis: { path: 'analysis', component: AnalysisPage, layout: 'main' },
+  'tech-directory': { path: 'tech-directory', component: TechnicianDirectoryPage, layout: 'main' },
+  'tech-join': { path: 'tech-join', component: TechnicianJoinPage, layout: 'main' },
 };
-
-export default AppRoutes;

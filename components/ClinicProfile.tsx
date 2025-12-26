@@ -11,141 +11,140 @@ interface ClinicProfileProps {
 
 const ClinicProfile: React.FC<ClinicProfileProps> = ({ clinic, onBack, onBookService }) => {
   const clinicServices = MOCK_SERVICES.filter(s => clinic.services.includes(s.id));
+  const toPersianDigits = (n: number | string) => {
+    const farsiDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+    return n.toString().replace(/\d/g, (x) => farsiDigits[parseInt(x)]);
+  };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 animate-in fade-in duration-500">
-      {/* Back Button */}
+    <div className="max-w-7xl mx-auto px-6 py-8 md:py-12 animate-in fade-in duration-700">
+      {/* Back Button (Elite Style) */}
       <button 
         onClick={onBack}
-        className="mb-6 flex items-center gap-2 text-gray-500 hover:text-pink-600 font-bold transition-colors"
+        className="mb-6 md:mb-10 flex items-center gap-3 text-slate-400 hover:text-pink-600 font-black transition-all group text-sm md:text-base"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 12H5M12 19l-7-7 7-7" />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 md:h-6 md:w-6 group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 12H5M12 19l-7-7 7-7" />
         </svg>
-        بازگشت به لیست
+        بازگشت به لیست مراکز
       </button>
 
-      {/* Hero Section */}
-      <div className="relative h-96 rounded-3xl overflow-hidden shadow-2xl mb-12">
-        <img src={clinic.image} className="w-full h-full object-cover" alt={clinic.name} />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-12">
-          <div className="text-white space-y-2">
-            <h1 className="text-5xl font-black">{clinic.name}</h1>
-            <p className="text-xl opacity-90 flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+      {/* Hero Header (High End) */}
+      <div className="relative h-[300px] md:h-[550px] rounded-[32px] md:rounded-[60px] overflow-hidden shadow-3xl mb-10 md:mb-16 border-4 md:border-8 border-white group">
+        <img src={clinic.image} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[3000ms]" alt={clinic.name} />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent flex flex-col justify-end p-6 md:p-12 text-right">
+          <div className="flex flex-col gap-2 md:gap-4">
+            <div className="flex items-center justify-end gap-2 md:gap-3">
+               <span className="bg-pink-600 text-white text-[8px] md:text-[10px] font-black px-3 py-1 md:px-4 md:py-1.5 rounded-full uppercase tracking-widest shadow-xl">Verified Clinic</span>
+               <div className="flex gap-0.5 md:gap-1 text-amber-400">
+                  {[1,2,3,4,5].map(i => <span key={i} className="text-sm md:text-xl">★</span>)}
+               </div>
+            </div>
+            <h1 className="text-2xl md:text-7xl font-black text-white drop-shadow-2xl">{clinic.name}</h1>
+            <p className="text-xs md:text-2xl text-slate-200 font-medium flex items-center justify-end gap-2 md:gap-3 opacity-90">
               {clinic.address}
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-7 md:w-7 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              </svg>
             </p>
           </div>
         </div>
-        <div className="absolute top-8 left-8 bg-white/90 backdrop-blur px-4 py-2 rounded-2xl flex items-center gap-2 font-black text-amber-600 shadow-lg">
-          <span className="text-xl">{clinic.rating}</span>
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 fill-current" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
-        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        {/* Left Column: Details */}
-        <div className="lg:col-span-2 space-y-12">
-          {/* About */}
-          <section className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-            <h2 className="text-2xl font-bold mb-6 text-gray-900 border-r-4 border-pink-600 pr-4">درباره کلینیک</h2>
-            <p className="text-gray-600 leading-relaxed text-lg">{clinic.description}</p>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-16">
+        {/* Main Content */}
+        <div className="lg:col-span-8 space-y-12 md:space-y-16">
+          {/* Detailed About (Premium Glass) */}
+          <section className="bg-white p-8 md:p-12 rounded-[40px] md:rounded-[50px] shadow-sm border border-slate-100 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-24 md:w-32 h-24 md:h-32 bg-pink-50 rounded-bl-full -z-10"></div>
+            <h2 className="text-xl md:text-4xl font-black mb-6 md:mb-8 text-slate-900 border-r-4 md:border-r-8 border-pink-600 pr-4 md:pr-6 text-right">درباره مرکز درمانی</h2>
+            <p className="text-slate-500 leading-relaxed md:leading-loose text-sm md:text-xl font-medium text-right whitespace-pre-line opacity-90">
+              {clinic.description}
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 pt-8 md:pt-10 mt-8 md:mt-10 border-t border-slate-50">
+               {[
+                 { l: 'تأسیس', v: '۱۳۹۲', i: '📅' },
+                 { l: 'پزشکان', v: '۱۲ متخصص', i: '👨‍⚕️' },
+                 { l: 'رضایت', v: '۹۸٪', i: '⭐' },
+                 { l: 'مساحت', v: '۴۵۰ متر', i: '🏢' },
+               ].map((item, i) => (
+                 <div key={i} className="text-center space-y-1">
+                    <div className="text-2xl md:text-3xl mb-1 md:mb-2">{item.i}</div>
+                    <p className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest">{item.l}</p>
+                    <p className="text-sm md:text-lg font-black text-slate-900">{toPersianDigits(item.v)}</p>
+                 </div>
+               ))}
+            </div>
           </section>
 
-          {/* Gallery */}
-          {clinic.gallery.length > 0 && (
-            <section>
-              <h2 className="text-2xl font-bold mb-6 text-gray-900 border-r-4 border-pink-600 pr-4">گالری تصاویر</h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {clinic.gallery.map((img, idx) => (
-                  <div key={idx} className="h-48 rounded-2xl overflow-hidden shadow-md group">
-                    <img src={img} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={`Gallery ${idx}`} />
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {/* Services */}
-          <section>
-            <h2 className="text-2xl font-bold mb-6 text-gray-900 border-r-4 border-pink-600 pr-4">خدمات ارائه شده</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* High Density Services List (Digikala Style Grid) */}
+          <section className="space-y-6 md:space-y-10 text-right">
+            <h2 className="text-xl md:text-4xl font-black text-slate-900 border-r-4 md:border-r-8 border-pink-600 pr-4 md:pr-6">خدمات و تعرفه‌ها</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               {clinicServices.map(service => (
-                <div key={service.id} className="bg-white p-6 rounded-2xl border border-gray-100 flex justify-between items-center hover:shadow-md transition-shadow">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-pink-50 rounded-xl flex items-center justify-center text-pink-600">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
+                <div key={service.id} className="bg-white p-4 md:p-8 rounded-[28px] md:rounded-[40px] border border-slate-100 flex flex-col gap-4 md:gap-6 hover:shadow-2xl transition-all group">
+                  <div className="flex items-center justify-between flex-row-reverse">
+                    <div className="w-16 h-16 md:w-24 md:h-24 bg-slate-50 rounded-2xl md:rounded-[30px] overflow-hidden shadow-inner shrink-0 border border-white">
+                       <img src={service.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform" alt={service.name} />
                     </div>
-                    <div>
-                      <h4 className="font-bold text-gray-900">{service.name}</h4>
-                      <p className="text-sm text-gray-400">{service.duration} دقیقه</p>
+                    <div className="text-right">
+                       <h4 className="text-sm md:text-xl font-black text-slate-900 group-hover:text-pink-600 transition-colors leading-tight">{service.name}</h4>
+                       <p className="text-[10px] md:text-sm text-slate-400 font-bold uppercase tracking-widest mt-1">{toPersianDigits(service.duration)} Minutes</p>
                     </div>
                   </div>
-                  <div className="text-left">
-                    <div className="font-black text-gray-900 mb-1">{service.price.toLocaleString()} تومان</div>
+                  <div className="flex justify-between items-center pt-4 md:pt-6 border-t border-slate-50">
                     <button 
                       onClick={() => onBookService(service)}
-                      className="text-pink-600 text-sm font-bold hover:underline"
+                      className="bg-slate-900 text-white px-5 py-2 md:px-8 md:py-3.5 rounded-xl md:rounded-2xl font-black text-[10px] md:text-xs hover:bg-pink-600 transition-all shadow-xl shadow-slate-200"
                     >
                       رزرو نوبت
                     </button>
+                    <div className="text-right">
+                       <div className="text-sm md:text-2xl font-black text-slate-900">{toPersianDigits(service.price.toLocaleString())}</div>
+                       <div className="text-[8px] md:text-[10px] text-slate-400 font-bold uppercase">Toman</div>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </section>
-
-          {/* Staff */}
-          {clinic.staff.length > 0 && (
-            <section>
-              <h2 className="text-2xl font-bold mb-6 text-gray-900 border-r-4 border-pink-600 pr-4">متخصصین کلینیک</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {clinic.staff.map(member => (
-                  <div key={member.id} className="bg-white p-6 rounded-3xl flex items-center gap-6 shadow-sm border border-gray-50 group hover:shadow-md transition-shadow">
-                    <img src={member.image} className="w-20 h-20 rounded-2xl object-cover ring-4 ring-pink-50 group-hover:ring-pink-100 transition-all" alt={member.name} />
-                    <div>
-                      <h4 className="text-xl font-bold text-gray-900">{member.name}</h4>
-                      <p className="text-pink-600 font-medium text-sm">{member.role}</p>
-                      <p className="text-gray-400 text-xs mt-1">{member.specialty}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
         </div>
 
-        {/* Right Column: Sticky Booking Widget */}
-        <div className="space-y-6">
-          <div className="bg-white p-8 rounded-3xl shadow-xl border border-pink-50 sticky top-28">
-            <h3 className="text-2xl font-black text-gray-900 mb-6">رزرو سریع</h3>
-            <div className="space-y-4 mb-8">
-              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                <p className="text-sm text-gray-500 mb-1">اتاق‌های آماده اجاره</p>
-                {/* Fix: changed availableRooms to availableRoomsCount */}
-                <p className="text-xl font-bold text-gray-900">{clinic.availableRoomsCount} اتاق</p>
+        {/* Sidebar: Sticky Action Card (Luxury Medical Design) */}
+        <div className="lg:col-span-4">
+          <div className="bg-slate-950 p-8 md:p-10 rounded-[40px] md:rounded-[60px] shadow-3xl sticky top-32 space-y-8 md:space-y-10 text-white text-right overflow-hidden border border-white/5">
+            <div className="absolute top-0 left-0 w-32 h-32 bg-pink-600/20 rounded-full blur-[80px]"></div>
+            
+            <div className="space-y-3 md:space-y-4 relative z-10">
+               <h3 className="text-xl md:text-3xl font-black tracking-tight">رزرو هوشمند</h3>
+               <p className="text-slate-400 font-medium text-xs md:text-sm leading-relaxed opacity-80">
+                 در کمترین زمان ممکن، اولین نوبت خالی برای شما توسط هوش مصنوعی پیدا خواهد شد.
+               </p>
+            </div>
+
+            <div className="space-y-3 md:space-y-4 relative z-10">
+              <div className="p-5 md:p-6 bg-white/5 rounded-2xl md:rounded-3xl border border-white/5 space-y-1">
+                <p className="text-[9px] md:text-xs text-slate-500 font-black uppercase tracking-[0.2em]">Next Available</p>
+                <p className="text-base md:text-xl font-black">فردا - ساعت ۰۹:۳۰</p>
               </div>
-              <div className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
-                <p className="text-sm text-gray-500 mb-1">اولین نوبت خالی</p>
-                <p className="text-xl font-bold text-gray-900">فردا ساعت ۹:۰۰</p>
+              <div className="p-5 md:p-6 bg-white/5 rounded-2xl md:rounded-3xl border border-white/5 space-y-1">
+                <p className="text-[9px] md:text-xs text-slate-500 font-black uppercase tracking-[0.2em]">Trust Score</p>
+                <p className="text-base md:text-xl font-black text-amber-500 flex items-center justify-end gap-1.5">
+                   {toPersianDigits(clinic.rating)} / ۵
+                   <span className="text-sm md:text-lg">★</span>
+                </p>
               </div>
             </div>
-            <button className="w-full py-5 bg-pink-600 text-white rounded-2xl font-black text-lg shadow-lg shadow-pink-200 hover:bg-pink-700 hover:scale-[1.02] transition-all mb-4">
-              درخواست مشاوره هوشمند
+
+            <button className="w-full py-4 md:py-6 bg-pink-600 text-white rounded-[20px] md:rounded-[30px] font-black text-sm md:text-lg shadow-3xl shadow-pink-900/50 hover:bg-white hover:text-slate-950 hover:scale-[1.02] transition-all relative z-10 active:scale-95">
+              مشاوره فوری AI
             </button>
-            <button className="w-full py-5 bg-white text-pink-600 border-2 border-pink-100 rounded-2xl font-black text-lg hover:border-pink-300 transition-all">
-              اجاره اتاق (ویژه تکنسین)
-            </button>
-            <p className="text-center text-xs text-gray-400 mt-6 leading-relaxed">
-              با رزرو از Zibaas، ۵٪ از مبلغ تراکنش به عنوان اعتبار به کیف پول شما بازمی‌گردد.
-            </p>
+            
+            <div className="pt-6 border-t border-white/5 text-center relative z-10">
+               <p className="text-[8px] md:text-[10px] text-slate-500 font-bold leading-relaxed">
+                 تمامی رزروها در Zibaas شامل تضمین بازگشت وجه و امنیت کامل اطلاعات پزشکی است.
+               </p>
+            </div>
           </div>
         </div>
       </div>
