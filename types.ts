@@ -36,8 +36,21 @@ export interface Booking {
   endTime?: string;
   price: number;
   status: 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED';
+  paymentStatus?: 'UNPAID' | 'PARTIAL' | 'PAID';
   customerName?: string;
   customerPhone?: string;
+  priority?: 'NORMAL' | 'HIGH';
+  requiredTools?: string[]; // New: Tools needed for this specific session
+}
+
+export interface InventoryItem {
+  id: string;
+  name: string;
+  category: string;
+  currentStock: number;
+  minRequired: number;
+  unit: string;
+  lastOrdered: string;
 }
 
 export interface Service {

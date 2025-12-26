@@ -95,6 +95,17 @@ export const MOCK_PRODUCTS: Product[] = [
     description: 'فرمولاسیون حرفه‌ای برای آبرسانی عمیق و رفع چروک‌های سطحی، مناسب برای استفاده بعد از فیشیال.',
     specs: { 'حجم': '۳۰ میلی‌لیتر', 'مناسب': 'انواع پوست', 'تولید': 'آمریکا' },
     stock: 45
+  },
+  {
+    id: 'p5',
+    name: 'فیلر لب نورامیس (Deep)',
+    brand: 'Neuramis',
+    price: 3500000,
+    category: 'CONSUMABLE',
+    image: 'https://images.unsplash.com/photo-1596704017254-9b121068fb31?auto=format&fit=crop&q=80&w=600',
+    description: 'فیلر با کیفیت کره‌ای با ویسکوزیته بالا مناسب برای حجم‌دهی لب و خط خنده.',
+    specs: { 'حجم': '۱ سی‌سی', 'ماندگاری': '۹ تا ۱۲ ماه', 'کشور': 'کره جنوبی' },
+    stock: 60
   }
 ];
 

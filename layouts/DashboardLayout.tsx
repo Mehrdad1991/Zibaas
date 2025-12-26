@@ -44,6 +44,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         return [
           { id: 'dashboard', label: 'مدیریت کلینیک', icon: '🏥' },
           { id: 'surgery', label: 'تقویم جراحی', icon: '🩺' },
+          { id: 'store', label: 'تدارکات و انبار', icon: '📦' },
           ...common
         ];
       case Role.Admin:
@@ -154,7 +155,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         <header className="bg-white/50 backdrop-blur-md h-20 md:h-24 px-6 md:px-10 flex items-center justify-between border-b border-slate-200 sticky top-0 z-40">
            <div className="flex items-center gap-4">
               <button className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 hover:text-pink-600 transition-all">
-                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></button>
+                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+              </button>
               <div className="w-10 h-10 rounded-xl bg-pink-100 border border-pink-200 flex items-center justify-center font-black text-pink-600">
                  {user?.phone ? user.phone.slice(-2) : '??'}
               </div>
