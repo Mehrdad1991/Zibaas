@@ -1,0 +1,8 @@
+{
+  "name": "Zibaas - Smart Beauty & Medical Booking",
+  "description": "A comprehensive AI-powered platform for booking beauty services, medical surgeries, and clinic rooms with integrated smart recommendations and support.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
