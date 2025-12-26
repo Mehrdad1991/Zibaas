@@ -1,5 +1,4 @@
 
-
 export enum UserRole {
   CUSTOMER = 'CUSTOMER',
   TECHNICIAN = 'TECHNICIAN',
@@ -8,7 +7,6 @@ export enum UserRole {
   SUPER_ADMIN = 'SUPER_ADMIN'
 }
 
-// Room interface for clinical spaces
 export interface Room {
   id: string;
   name: string;
@@ -19,21 +17,6 @@ export interface Room {
   description: string;
   isAvailable: boolean;
   type?: string;
-}
-
-// SurgeryBooking interface for operational management
-export interface SurgeryBooking {
-  id: string;
-  roomId: string;
-  clinicId: string;
-  surgeonName: string;
-  patientName: string;
-  surgeryType: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-  status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
-  anesthesiaType?: 'LOCAL' | 'GENERAL';
 }
 
 export interface TimeSlot {
@@ -100,7 +83,7 @@ export interface Clinic {
   rating: number;
   image: string;
   availableRoomsCount: number;
-  rooms: Room[]; // Updated to use the Room interface
+  rooms: Room[];
   services: string[];
   description: string;
   staff: any[];

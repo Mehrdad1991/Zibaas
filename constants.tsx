@@ -109,31 +109,32 @@ export const MOCK_CLINICS: Clinic[] = [
     rooms: [
       { 
         id: 'r1', 
-        name: 'اتاق VIP شماره ۱', 
-        pricePerHour: 250000, 
+        name: 'اتاق جراحی VIP ۱', 
+        pricePerHour: 450000, 
         features: ['تخت برقی ۴ موتوره', 'نورپردازی تخصصی جراحی', 'اتوکلاو کلاس B اختصاصی', 'کمد ابزار قفل‌دار', 'یخچال دارویی'], 
         image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=800', 
-        gallery: [
-          'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=800',
-          'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=800',
-          'https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&q=80&w=800'
-        ],
+        gallery: [],
         description: 'این اتاق مجهز به تمامی استانداردهای لازم برای انجام جراحی‌های سرپایی و تزریقات تخصصی است.',
-        isAvailable: true 
+        isAvailable: true,
+        type: 'SURGERY'
+      },
+      { 
+        id: 'r2', 
+        name: 'اتاق تزریق و زیبایی ۲', 
+        pricePerHour: 250000, 
+        features: ['تخت ۳ موتوره', 'پمپ تزریق', 'مانیتورینگ علائم حیاتی'], 
+        image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=800', 
+        gallery: [],
+        description: 'مناسب برای تزریق فیلر، بوتاکس و مزوتراپی در محیطی کاملاً استریل.',
+        isAvailable: true,
+        type: 'SURGERY'
       }
     ],
     services: ['1', '2', '4'],
     description: 'کلینیک تخصصی زیبا با ۱۰ سال سابقه و بیش از ۵۰۰۰ پرونده موفق، رتبه ۱ جراحی‌های سرپایی در منطقه جردن را داراست.',
     address: 'تهران، خیابان جردن، کوچه نیلوفر، پلاک ۱۲',
-    staff: [
-      { id: 's1', name: 'دکتر مریم احمدی', role: 'متخصص پوست و مو', specialty: 'زیبایی و لیزر', image: 'https://i.pravatar.cc/150?u=s1', isPlatformUser: true },
-      { id: 's2', name: 'دکتر سهراب مرادی', role: 'جراح پلاستیک', specialty: 'فیلر و جوانسازی', image: 'https://i.pravatar.cc/150?u=s2', isPlatformUser: true }
-    ],
-    gallery: [
-      'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=400',
-      'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=400',
-      'https://images.unsplash.com/photo-1504813184591-01592fd03cf7?auto=format&fit=crop&q=80&w=400'
-    ]
+    staff: [],
+    gallery: []
   },
   { 
     id: 'c2', 
@@ -145,21 +146,31 @@ export const MOCK_CLINICS: Clinic[] = [
     rooms: [
       { 
         id: 'r3', 
-        name: 'یونیت دندانپزشکی A', 
-        pricePerHour: 300000, 
-        features: ['یونیت مدرن صدرا', 'کمپرسور سایلنت'], 
+        name: 'اتاق عمل شماره ۳', 
+        pricePerHour: 600000, 
+        features: ['تجهیزات کامل بیهوشی', 'تخت جراحی هیدرولیک', 'مانیتورینگ پیشرفته'], 
         image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=800', 
-        gallery: ['https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=800'],
-        description: 'یونیت کاملاً مجهز برای انجام کلیه خدمات دندانپزشکی ترمیمی و زیبایی.',
-        isAvailable: true 
+        gallery: [],
+        description: 'اتاق عمل جنرال با قابلیت انجام جراحی‌های زیبایی سنگین تحت بیهوشی کامل.',
+        isAvailable: true,
+        type: 'SURGERY'
       },
+      { 
+        id: 'r4', 
+        name: 'یونیت کاشت مو A', 
+        pricePerHour: 350000, 
+        features: ['صندلی مخصوص کاشت مو', 'میکروسکوپ‌های نوری', 'نور سرد'], 
+        image: 'https://images.unsplash.com/photo-1585747623397-6810c62b2abb?auto=format&fit=crop&q=80&w=400', 
+        gallery: [],
+        description: 'فضای اختصاصی برای تیم‌های کاشت مو با تهویه مخصوص.',
+        isAvailable: true,
+        type: 'SURGERY'
+      }
     ],
     services: ['3', '5'],
     description: 'مرکز درمانی سلامت مهر، قطب جراحی‌های زیبایی با کادر پزشکی تمام وقت و مجهزترین آی‌سی‌یو پشتیبان.',
     address: 'تهران، میدان ونک، ابتدای خیابان ملاصدرا',
-    staff: [
-      { id: 's3', name: 'دکتر علی کاظمی', role: 'جراح فوق تخصص', specialty: 'راینوپلاستی', image: 'https://i.pravatar.cc/150?u=s3', isPlatformUser: true }
-    ],
+    staff: [],
     gallery: []
   },
 ];

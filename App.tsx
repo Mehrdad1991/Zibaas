@@ -33,22 +33,13 @@ const App: React.FC = () => {
     saveAuth(authState);
   }, [authState]);
 
-  // Safe route selection with fallback
-  const currentRoute = ROUTES[activeTab] || ROUTES['home'];
-  const PageComponent = currentRoute?.component || (() => (
-    <div className="p-20 text-center font-vazir">
-      <h2 className="text-2xl font-black text-slate-800">خطا در بارگذاری صفحه</h2>
-      <p className="text-slate-500 mt-2">لطفاً صفحه را رفرش کنید یا به صفحه اصلی بازگردید.</p>
-      <button onClick={() => setActiveTab('home')} className="mt-6 bg-pink-600 text-white px-8 py-2 rounded-xl">بازگشت به خانه</button>
-    </div>
-  ));
-
   const handleLogin = (phone: string) => {
     setAuthState(prev => ({
       ...prev,
       phone: phone,
       userId: 'u-' + Math.random().toString(36).substr(2, 9),
-      token: 'sk_' + Math.random().toString(36).substr(2, 20)
+      token: 'sk_' + Math.random().toString(36).substr(2, 20),
+      role: prev.role || Role.User
     }));
     setShowAuth(false);
   };
@@ -62,6 +53,19 @@ const App: React.FC = () => {
     setAuthState({ role: null, userId: null, phone: null, token: null });
     setActiveTab('home');
   };
+
+  const handleBookService = (s: Service) => {
+    if (!authState.userId) {
+      setShowAuth(true);
+      return;
+    }
+    setPreSelectedService(s);
+    setBookingStep(1);
+    setActiveTab('booking');
+  };
+
+  const currentRoute = ROUTES[activeTab] || ROUTES['home'];
+  const PageComponent = currentRoute?.component || (() => null);
 
   const pageProps = {
     onTabChange: setActiveTab,
@@ -85,7 +89,7 @@ const App: React.FC = () => {
     onUpdateQuantity: (productId: string, delta: number) => {
         setCart(prev => prev.map(item => item.product.id === productId ? { ...item, quantity: Math.max(0, item.quantity + delta) } : item).filter(item => item.quantity > 0));
     },
-    onBookService: (s: Service) => { setPreSelectedService(s); setActiveTab('booking'); },
+    onBookService: handleBookService,
     onLogin: handleLogin,
     onSelectRole: handleSelectRole,
     bookingStep,
@@ -109,11 +113,15 @@ const App: React.FC = () => {
         </div>
       )}
       
-      {/* Explicit rendering for complex state routes if not defined in ROUTES map cleanly */}
       {activeTab === 'product-detail' && selectedProduct ? (
-        <ProductDetail product={selectedProduct} onBack={() => setActiveTab('store')} onAddToCart={pageProps.onAddToCart} />
+        <ProductDetail 
+          product={selectedProduct} 
+          onBack={() => setActiveTab('store')} 
+          onAddToCart={pageProps.onAddToCart}
+          onBookService={handleBookService}
+        />
       ) : activeTab === 'checkout' ? (
-        <Checkout cart={cart} onBack={() => setActiveTab('store')} onSuccess={() => setActiveTab('order-success')} />
+        <Checkout cart={cart} onBack={() => setActiveTab('cart')} onSuccess={() => setActiveTab('order-success')} />
       ) : activeTab === 'order-success' ? (
         <Confirmation onFinish={() => { setActiveTab('dashboard'); setCart([]); }} />
       ) : (
@@ -125,7 +133,7 @@ const App: React.FC = () => {
   if (activeTab === 'booking') {
     return (
       <BookingLayout currentStep={bookingStep} onCancel={() => setActiveTab('home')}>
-        {content}
+        <PageComponent {...pageProps} />
       </BookingLayout>
     );
   }
@@ -148,6 +156,7 @@ const App: React.FC = () => {
           activeTab={activeTab} 
           onTabChange={setActiveTab} 
           onLogout={handleLogout}
+          onSelectRole={handleSelectRole}
         >
           {content}
         </DashboardLayout>

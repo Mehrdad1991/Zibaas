@@ -9,7 +9,7 @@ import { Service } from '../types';
 
 const BookingPage: React.FC<any> = ({ bookingStep, setBookingStep, onTabChange, preSelectedService }) => {
   const [bookingData, setBookingData] = useState({
-    service: null as Service | null,
+    service: preSelectedService || null,
     date: '',
     time: '',
     patientName: '',
@@ -17,12 +17,10 @@ const BookingPage: React.FC<any> = ({ bookingStep, setBookingStep, onTabChange, 
     notes: ''
   });
 
-  // Effect to handle pre-selected service from profiles
+  // Keep internal state sync with preSelectedService prop if it changes
   useEffect(() => {
-    if (preSelectedService) {
+    if (preSelectedService && (!bookingData.service || bookingData.service.id !== preSelectedService.id)) {
       setBookingData(prev => ({ ...prev, service: preSelectedService }));
-      // If a service is already selected, we might want to skip Step 1 or just show it highlighted.
-      // Skipping can be confusing if they want to change it, so we stay on Step 1 but with the selection made.
     }
   }, [preSelectedService]);
 
@@ -35,7 +33,7 @@ const BookingPage: React.FC<any> = ({ bookingStep, setBookingStep, onTabChange, 
       return (
         <SelectService 
           selectedService={bookingData.service} 
-          onSelect={(s) => updateBookingData('service', s)} 
+          onSelect={(s: Service) => updateBookingData('service', s)} 
           onNext={() => setBookingStep(2)} 
         />
       );
@@ -45,7 +43,7 @@ const BookingPage: React.FC<any> = ({ bookingStep, setBookingStep, onTabChange, 
           service={bookingData.service}
           selectedDate={bookingData.date}
           selectedTime={bookingData.time}
-          onSelect={(d, t) => {
+          onSelect={(d: string, t: string) => {
             updateBookingData('date', d);
             updateBookingData('time', t);
           }} 
@@ -57,7 +55,7 @@ const BookingPage: React.FC<any> = ({ bookingStep, setBookingStep, onTabChange, 
       return (
         <UserInfo 
           data={bookingData} 
-          onChange={(field, val) => updateBookingData(field, val)} 
+          onChange={(field: string, val: string) => updateBookingData(field, val)} 
           onNext={() => setBookingStep(4)} 
           onBack={() => setBookingStep(2)} 
         />

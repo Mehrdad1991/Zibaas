@@ -13,6 +13,7 @@ import RentalPage from './pages/RentalPage';
 import AnalysisPage from './pages/AnalysisPage';
 import TechnicianDirectoryPage from './pages/TechnicianDirectoryPage';
 import TechnicianJoinPage from './pages/TechnicianJoinPage';
+import CartPage from './pages/CartPage';
 
 export type RoutePath = 
   | 'home' 
@@ -24,6 +25,7 @@ export type RoutePath =
   | 'auth' 
   | 'store' 
   | 'product-detail'
+  | 'cart'
   | 'checkout'
   | 'order-success'
   | 'surgery' 
@@ -47,6 +49,7 @@ export const ROUTES: Record<RoutePath, RouteConfig> = {
   dashboard: { path: 'dashboard', component: DashboardPage, layout: 'dashboard' },
   auth: { path: 'auth', component: AuthPage, layout: 'none' },
   store: { path: 'store', component: StorePage, layout: 'main' },
+  cart: { path: 'cart', component: CartPage, layout: 'main' },
   'product-detail': { path: 'product-detail', component: () => null, layout: 'main' },
   'checkout': { path: 'checkout', component: () => null, layout: 'main' },
   'order-success': { path: 'order-success', component: () => null, layout: 'main' },
