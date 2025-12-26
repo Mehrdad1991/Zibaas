@@ -1,85 +1,79 @@
 
 import React, { useState } from 'react';
-import { UserRole } from '../types';
+import { Role } from '../store/roles';
 
 interface RoleOnboardingProps {
-  onSelectRole: (role: UserRole) => void;
+  onSelectRole: (role: Role) => void;
 }
 
 const RoleOnboarding: React.FC<RoleOnboardingProps> = ({ onSelectRole }) => {
-  const [selectedType, setSelectedType] = useState<UserRole | null>(null);
+  const [selectedType, setSelectedType] = useState<Role | null>(null);
 
   const roles = [
     { 
-      id: UserRole.CUSTOMER, 
-      title: 'کاربر عادی', 
-      desc: 'رزرو نوبت، خرید محصول و مشاوره هوشمند', 
+      id: Role.User, 
+      title: 'کاربر (مراجع)', 
+      desc: 'رزرو نوبت، خرید محصولات و مشاوره هوشمند زیبایی', 
       icon: '👤',
       color: 'bg-blue-50 text-blue-600'
     },
     { 
-      id: UserRole.TECHNICIAN, 
+      id: Role.Technician, 
       title: 'متخصص (تکنسین)', 
-      desc: 'ارائه خدمات، اجاره اتاق و مدیریت پورتفولیو', 
+      desc: 'نمایش پورتفولیو حرفه‌ای، مدیریت مراجعین و اجاره اتاق عمل', 
       icon: '💉',
       color: 'bg-pink-50 text-pink-600'
     },
     { 
-      id: UserRole.CLINIC_ADMIN, 
-      title: 'مدیر کلینیک', 
-      desc: 'ثبت کلینیک، مدیریت کادر درمان و اجاره فضا', 
+      id: Role.Clinic, 
+      title: 'کلینیک (مدیر مرکز)', 
+      desc: 'مدیریت یونیت‌ها، جذب متخصص و مانیتورینگ نوبت‌های درمانی', 
       icon: '🏥',
       color: 'bg-indigo-50 text-indigo-600'
     },
     { 
-      id: UserRole.SELLER, 
-      title: 'فروشنده تجهیزات', 
-      desc: 'فروش دستگاه‌ها، مصرفی‌ها و محصولات زیبایی', 
-      icon: '📦',
-      color: 'bg-amber-50 text-amber-600'
+      id: Role.Admin, 
+      title: 'مدیر کل سیستم (Admin)', 
+      desc: 'نظارت بر عملکرد پلتفرم، تایید متخصصین و گزارشات مالی کل', 
+      icon: '⚙️',
+      color: 'bg-slate-900 text-white'
     }
   ];
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4 animate-in fade-in zoom-in duration-500">
-      <div className="text-center mb-12 space-y-4">
-        <h1 className="text-3xl md:text-5xl font-black text-gray-900 tracking-tighter">به زیباست خوش آمدید!</h1>
-        <p className="text-gray-500 font-bold">نقش خود را در پلتفرم انتخاب کنید تا فرآیند ثبت‌نام تکمیل شود.</p>
+    <div className="max-w-6xl mx-auto py-12 px-6 animate-in fade-in zoom-in duration-500 text-right">
+      <div className="text-center mb-16 space-y-4">
+        <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter leading-tight">هویت شما در زیباست؟</h1>
+        <p className="text-gray-500 font-bold text-lg">لطفاً نقش خود را برای دسترسی به امکانات اختصاصی انتخاب کنید.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {roles.map((role) => (
           <button
             key={role.id}
             onClick={() => setSelectedType(role.id)}
-            className={`p-8 rounded-[40px] border-2 text-right transition-all flex items-center gap-6 group ${
-              selectedType === role.id ? 'border-pink-600 bg-pink-50 shadow-xl' : 'border-gray-100 bg-white hover:border-pink-200'
+            className={`p-10 rounded-[50px] border-2 transition-all flex flex-col items-center gap-8 group relative overflow-hidden h-full ${
+              selectedType === role.id ? 'border-pink-600 bg-pink-50 shadow-2xl shadow-pink-100' : 'border-gray-100 bg-white hover:border-pink-200 shadow-sm'
             }`}
           >
-            <div className={`w-16 h-16 rounded-3xl flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition-transform ${role.color}`}>
+            <div className={`w-24 h-24 rounded-[35px] flex items-center justify-center text-5xl transition-transform ${role.color}`}>
               {role.icon}
             </div>
-            <div className="flex-1">
-              <h3 className="text-xl font-black text-gray-900 mb-1">{role.title}</h3>
-              <p className="text-xs text-gray-400 font-bold leading-relaxed">{role.desc}</p>
+            <div className="text-center space-y-2">
+              <h3 className="text-xl font-black text-gray-900">{role.title}</h3>
+              <p className="text-[10px] text-gray-400 font-bold leading-relaxed">{role.desc}</p>
             </div>
-            {selectedType === role.id && (
-               <div className="bg-pink-600 text-white p-1 rounded-full">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"/></svg>
-               </div>
-            )}
           </button>
         ))}
       </div>
 
       {selectedType && (
-        <div className="mt-12 text-center animate-in slide-in-from-bottom-5 duration-300">
+        <div className="mt-16 text-center animate-in slide-in-from-bottom-5">
           <button
             onClick={() => onSelectRole(selectedType)}
-            className="bg-gray-900 text-white px-12 py-5 rounded-[25px] font-black text-lg shadow-2xl hover:bg-pink-600 transition-all flex items-center gap-4 mx-auto"
+            className="bg-slate-900 text-white px-16 py-6 rounded-[35px] font-black text-xl shadow-4xl hover:bg-pink-600 transition-all"
           >
-            تکمیل ثبت‌نام و ورود
-            <svg className="w-5 h-5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            تایید و ورود به پنل مدیریتی
           </button>
         </div>
       )}

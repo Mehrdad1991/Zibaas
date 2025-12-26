@@ -5,11 +5,11 @@ import CustomerPanel from '../components/panels/CustomerPanel';
 import TechnicianPanel from '../components/panels/TechnicianPanel';
 import ClinicPanel from '../components/panels/ClinicPanel';
 import AdminPanel from '../components/panels/AdminPanel';
-import { UserRole } from '../types';
+import { Role } from '../store/roles';
 
 const DashboardPage: React.FC<any> = ({ user, onSelectRole }) => {
   // 1. Initial State: No User Logged In
-  if (!user) return (
+  if (!user || !user.userId) return (
     <div className="py-20 text-center space-y-6">
        <div className="text-6xl grayscale">🔒</div>
        <h2 className="text-3xl font-black text-slate-900">دسترسی محدود شده است</h2>
@@ -20,15 +20,15 @@ const DashboardPage: React.FC<any> = ({ user, onSelectRole }) => {
   // 2. State: Logged in but No Role Selected (First time Onboarding)
   if (!user.role) return <RoleOnboarding onSelectRole={onSelectRole} />;
   
-  // 3. Dispatcher based on Role (Boundaries)
+  // 3. Dispatcher based on Role (The User's defined Role Enum)
   switch (user.role) {
-    case UserRole.CUSTOMER: 
+    case Role.User: 
       return <CustomerPanel />;
-    case UserRole.TECHNICIAN: 
+    case Role.Technician: 
       return <TechnicianPanel />;
-    case UserRole.CLINIC_ADMIN: 
+    case Role.Clinic: 
       return <ClinicPanel />;
-    case UserRole.SUPER_ADMIN: 
+    case Role.Admin:
       return <AdminPanel />;
     default: 
       return <CustomerPanel />;

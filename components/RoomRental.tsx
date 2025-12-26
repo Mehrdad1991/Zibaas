@@ -1,11 +1,12 @@
 
 import React, { useState, useMemo } from 'react';
 import { MOCK_CLINICS } from '../constants';
-import { Clinic, Room, UserRole } from '../types';
+import { Clinic, Room } from '../types';
+import { Role } from '../store/roles';
 
 interface RoomRentalProps {
   onViewRoomDetail: (room: Room, clinic: Clinic) => void;
-  userRole: UserRole;
+  userRole: Role | null;
   isVerified?: boolean;
 }
 
@@ -27,8 +28,6 @@ const RoomRental: React.FC<RoomRentalProps> = ({ onViewRoomDetail, userRole, isV
     return selectedClinic.rooms.filter(room => {
       const priceMatch = room.pricePerHour <= maxPrice;
       const featureMatch = selectedFeatures.length === 0 || selectedFeatures.every(f => room.features.includes(f));
-      // Note: Capacity isn't strictly in our Room type yet, we'll simulate it based on description/name for this demo 
-      // or just filter by features for now as requested.
       return priceMatch && featureMatch;
     });
   }, [selectedClinic, maxPrice, selectedFeatures]);
@@ -40,7 +39,7 @@ const RoomRental: React.FC<RoomRentalProps> = ({ onViewRoomDetail, userRole, isV
   };
 
   // If user is not a technician or not verified, show a conversion landing page
-  if (userRole !== UserRole.TECHNICIAN || !isVerified) {
+  if (userRole !== Role.Technician || !isVerified) {
     return (
       <div className="max-w-4xl mx-auto px-6 py-20 text-center space-y-12 animate-in fade-in zoom-in duration-500">
         <div className="w-24 h-24 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Home from './pages/Home';
+import Home from './layouts/Home';
 import SearchResults from './pages/SearchResults';
 import ClinicProfilePage from './pages/ClinicProfilePage';
 import TechnicianProfilePage from './pages/TechnicianProfilePage';
