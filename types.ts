@@ -52,6 +52,7 @@ export interface PortfolioItem {
   title: string;
   image: string;
   description: string;
+  tag?: string;
 }
 
 export interface Technician {
@@ -61,6 +62,9 @@ export interface Technician {
   specialty: string;
   image: string;
   bio: string;
+  philosophy?: string;
+  experienceYears?: number;
+  awards?: string[];
   rating: number;
   reviewCount: number;
   portfolio: PortfolioItem[];

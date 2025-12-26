@@ -9,6 +9,46 @@ export const MOCK_SERVICES: Service[] = [
   { id: '5', name: 'کاشت مو', price: 15000000, duration: 480, category: 'SURGERY', image: 'https://images.unsplash.com/photo-1585747623397-6810c62b2abb?auto=format&fit=crop&q=80&w=400' },
 ];
 
+export const MOCK_TECHNICIANS: Technician[] = [
+  {
+    id: 't1',
+    name: 'استاد الناز رحیمی',
+    role: 'متخصص ارشد فیشیال و جوانسازی',
+    specialty: 'آنالیز ساختاری پوست',
+    image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=400',
+    bio: 'با بیش از ۱۲ سال تجربه در کلینیک‌های طراز اول تهران و دبی. مدرس تکنیک‌های نوین پاکسازی در آکادمی Zibaas.',
+    philosophy: 'زیبایی یک فرآیند بیولوژیکی است، نه یک تغییر ناگهانی. من بر حفظ ساختار طبیعی چهره تمرکز دارم.',
+    experienceYears: 12,
+    awards: ['تکنسین برتر سال ۱۴۰۲', 'گواهینامه تخصصی پوست از آکادمی پاریس'],
+    rating: 4.9,
+    reviewCount: 342,
+    offeredServices: ['1', '4'],
+    isVerified: true,
+    portfolio: [
+      { id: 'p1', title: 'اصلاح کانتورینگ صورت', image: 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&q=80&w=400', description: 'ترکیب تکنیک‌های غیرتهاجمی برای زاویه‌سازی فک.', tag: 'VIP Case' },
+      { id: 'p2', title: 'درمان هایپرپیگمانتاسیون', image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=400', description: 'رفع لک‌های مقاوم به درمان طی ۵ جلسه.', tag: 'Success Story' }
+    ]
+  },
+  {
+    id: 't2',
+    name: 'دکتر حمید صادقی',
+    role: 'جراح و تکنسین ارشد کاشت مو',
+    specialty: 'تکنیک Micro-FIT اختصاصی',
+    image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=400',
+    bio: 'پیشرو در متدهای نوین کاشت مو با تراکم حداکثری. دارای سابقه همکاری با بیش از ۲۰ مرکز فوق‌تخصصی در خاورمیانه.',
+    philosophy: 'خط رویش مو، امضای یک جراح است. من برای هر مراجع یک طراحی منحصر به فرد انجام می‌دهم.',
+    experienceYears: 15,
+    awards: ['نشان طلای نوآوری در جراحی زیبایی', 'عضو انجمن جراحان موی آسیا'],
+    rating: 4.8,
+    reviewCount: 1240,
+    offeredServices: ['5'],
+    isVerified: true,
+    portfolio: [
+      { id: 'p3', title: 'کاشت فول‌تراکم جلو سر', image: 'https://images.unsplash.com/photo-1585747623397-6810c62b2abb?auto=format&fit=crop&q=80&w=400', description: 'استفاده از تکنیک انحصاری SUT Plus برای تراکم فوق‌العاده.', tag: 'Artistic Line' }
+    ]
+  }
+];
+
 export const MOCK_PRODUCTS: Product[] = [
   {
     id: 'p1',
@@ -58,46 +98,12 @@ export const MOCK_PRODUCTS: Product[] = [
   }
 ];
 
-export const MOCK_TECHNICIANS: Technician[] = [
-  {
-    id: 't1',
-    name: 'الناز رحیمی',
-    role: 'متخصص زیبایی و فیشیال',
-    specialty: 'جوانسازی پوست',
-    image: 'https://i.pravatar.cc/150?u=t1',
-    bio: 'با بیش از ۸ سال سابقه در زمینه مراقبت‌های پوستی و پاکسازی تخصصی. فارغ‌التحصیل آکادمی‌های معتبر بین‌المللی.',
-    rating: 4.9,
-    reviewCount: 124,
-    offeredServices: ['1', '4'],
-    isVerified: true,
-    portfolio: [
-      { id: 'p1', title: 'درمان آکنه شدید', image: 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&q=80&w=400', description: 'نتیجه پس از ۳ جلسه پاکسازی تخصصی' },
-      { id: 'p2', title: 'جوانسازی دور چشم', image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=400', description: 'ترکیب مزوتراپی و فیشیال' }
-    ]
-  },
-  {
-    id: 't2',
-    name: 'حمید صادقی',
-    role: 'تکنسین ارشد کاشت مو',
-    specialty: 'کاشت مو به روش SUT',
-    image: 'https://i.pravatar.cc/150?u=t2',
-    bio: 'متخصص کاشت مو و ابرو با بالاترین تراکم ممکن. همکاری با برترین کلینیک‌های تهران و شیراز.',
-    rating: 4.7,
-    reviewCount: 89,
-    offeredServices: ['5'],
-    isVerified: true,
-    portfolio: [
-      { id: 'p3', title: 'کاشت موی سر', image: 'https://images.unsplash.com/photo-1585747623397-6810c62b2abb?auto=format&fit=crop&q=80&w=400', description: 'تراکم بالا پس از ۶ ماه' }
-    ]
-  }
-];
-
 export const MOCK_CLINICS: Clinic[] = [
   { 
     id: 'c1', 
     name: 'کلینیک تخصصی زیبا', 
     location: 'تهران، جردن', 
-    rating: 4.8, 
+    rating: 4.9, 
     image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=800', 
     availableRoomsCount: 2, 
     rooms: [
@@ -112,25 +118,12 @@ export const MOCK_CLINICS: Clinic[] = [
           'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=800',
           'https://images.unsplash.com/photo-1527613426441-4da17471b66d?auto=format&fit=crop&q=80&w=800'
         ],
-        description: 'این اتاق مجهز به تمامی استانداردهای لازم برای انجام جراحی‌های سرپایی و تزریقات تخصصی است. دکوراسیون مدرن و محیط کاملاً استریل، تجربه‌ای آرام برای پزشک و بیمار فراهم می‌کند.',
-        isAvailable: true 
-      },
-      { 
-        id: 'r2', 
-        name: 'اتاق جراحی سرپایی', 
-        pricePerHour: 450000, 
-        features: ['مانیتورینگ علائم حیاتی', 'ساکشن سنترال', 'کپسول اکسیژن', 'تخت ریکاوری'], 
-        image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=800', 
-        gallery: [
-          'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=800',
-          'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=800'
-        ],
-        description: 'ایده‌آل برای اعمال جراحی کوچک پوست، کاشت مو و بلفاروپلاستی. این فضا دارای تهویه فشار مثبت و سیستم برق اضطراری است.',
+        description: 'این اتاق مجهز به تمامی استانداردهای لازم برای انجام جراحی‌های سرپایی و تزریقات تخصصی است.',
         isAvailable: true 
       }
     ],
     services: ['1', '2', '4'],
-    description: 'کلینیک تخصصی زیبا با بهره‌گیری از پیشرفته‌ترین تجهیزات روز دنیا و کادری مجرب، آماده ارائه خدمات زیبایی و جوانسازی به شما عزیزان می‌باشد.',
+    description: 'کلینیک تخصصی زیبا با ۱۰ سال سابقه و بیش از ۵۰۰۰ پرونده موفق، رتبه ۱ جراحی‌های سرپایی در منطقه جردن را داراست.',
     address: 'تهران، خیابان جردن، کوچه نیلوفر، پلاک ۱۲',
     staff: [
       { id: 's1', name: 'دکتر مریم احمدی', role: 'متخصص پوست و مو', specialty: 'زیبایی و لیزر', image: 'https://i.pravatar.cc/150?u=s1', isPlatformUser: true },
@@ -154,17 +147,15 @@ export const MOCK_CLINICS: Clinic[] = [
         id: 'r3', 
         name: 'یونیت دندانپزشکی A', 
         pricePerHour: 300000, 
-        features: ['یونیت مدرن صدرا', 'کمپرسور سایلنت', 'لایت کیور', 'جرم‌گیر پیزو'], 
+        features: ['یونیت مدرن صدرا', 'کمپرسور سایلنت'], 
         image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=800', 
-        gallery: [
-          'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=800'
-        ],
-        description: 'یونیت کاملاً مجهز برای انجام کلیه خدمات دندانپزشکی ترمیمی و زیبایی. محیطی دلباز با نور طبیعی.',
+        gallery: ['https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=800'],
+        description: 'یونیت کاملاً مجهز برای انجام کلیه خدمات دندانپزشکی ترمیمی و زیبایی.',
         isAvailable: true 
       },
     ],
     services: ['3', '5'],
-    description: 'مرکز درمانی سلامت مهر با سابقه‌ای درخشان در جراحی‌های پیچیده و کاشت مو، ایمنی و سلامت شما را اولویت اول خود قرار می‌دهد.',
+    description: 'مرکز درمانی سلامت مهر، قطب جراحی‌های زیبایی با کادر پزشکی تمام وقت و مجهزترین آی‌سی‌یو پشتیبان.',
     address: 'تهران، میدان ونک، ابتدای خیابان ملاصدرا',
     staff: [
       { id: 's3', name: 'دکتر علی کاظمی', role: 'جراح فوق تخصص', specialty: 'راینوپلاستی', image: 'https://i.pravatar.cc/150?u=s3', isPlatformUser: true }
