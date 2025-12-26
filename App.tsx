@@ -20,6 +20,7 @@ const App: React.FC = () => {
   const [selectedClinic, setSelectedClinic] = useState<Clinic | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<any>(null);
   const [selectedTech, setSelectedTech] = useState<Technician | null>(null);
+  const [preSelectedService, setPreSelectedService] = useState<Service | null>(null);
 
   // Booking Step State
   const [bookingStep, setBookingStep] = useState(1);
@@ -56,7 +57,8 @@ const App: React.FC = () => {
     setActiveTab('home');
   };
 
-  const handleBookService = () => {
+  const handleBookService = (service: Service | null = null) => {
+    setPreSelectedService(service);
     setBookingStep(1);
     setActiveTab('booking');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -71,6 +73,7 @@ const App: React.FC = () => {
     selectedClinic: selectedClinic,
     selectedTech: selectedTech,
     selectedRoom: selectedRoom,
+    preSelectedService: preSelectedService,
     onViewRoomDetail: (r: any, c: any) => { setSelectedRoom(r); setSelectedClinic(c); setActiveTab('rental'); },
     cart: cart,
     onAddToCart: handleAddToCart,

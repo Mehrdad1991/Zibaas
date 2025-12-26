@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SelectService from '../Booking/steps/SelectService';
 import SelectTime from '../Booking/steps/SelectTime';
 import UserInfo from '../Booking/steps/UserInfo';
@@ -7,7 +7,7 @@ import Payment from '../Booking/steps/Payment';
 import Confirmation from '../Booking/steps/Confirmation';
 import { Service } from '../types';
 
-const BookingPage: React.FC<any> = ({ bookingStep, setBookingStep, onTabChange }) => {
+const BookingPage: React.FC<any> = ({ bookingStep, setBookingStep, onTabChange, preSelectedService }) => {
   const [bookingData, setBookingData] = useState({
     service: null as Service | null,
     date: '',
@@ -16,6 +16,15 @@ const BookingPage: React.FC<any> = ({ bookingStep, setBookingStep, onTabChange }
     phone: '',
     notes: ''
   });
+
+  // Effect to handle pre-selected service from profiles
+  useEffect(() => {
+    if (preSelectedService) {
+      setBookingData(prev => ({ ...prev, service: preSelectedService }));
+      // If a service is already selected, we might want to skip Step 1 or just show it highlighted.
+      // Skipping can be confusing if they want to change it, so we stay on Step 1 but with the selection made.
+    }
+  }, [preSelectedService]);
 
   const updateBookingData = (field: string, val: any) => {
     setBookingData(prev => ({ ...prev, [field]: val }));
