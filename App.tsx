@@ -8,6 +8,9 @@ import Auth from './components/Auth';
 import LiveAdvisor from './components/LiveAdvisor';
 import AIChatbot from './components/AIChatbot';
 import Breadcrumbs from './components/Breadcrumbs';
+import ProductDetail from './components/ProductDetail';
+import Checkout from './components/Checkout';
+import Confirmation from './Booking/steps/Confirmation';
 import { Clinic, Service, Technician, CartItem, Product } from './types';
 import { Role, AuthState, loadAuth, saveAuth } from './store/roles';
 
@@ -22,6 +25,7 @@ const App: React.FC = () => {
   const [selectedRoom, setSelectedRoom] = useState<any>(null);
   const [selectedTech, setSelectedTech] = useState<Technician | null>(null);
   const [preSelectedService, setPreSelectedService] = useState<Service | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const [bookingStep, setBookingStep] = useState(1);
 
@@ -85,7 +89,16 @@ const App: React.FC = () => {
     onLogin: handleLogin,
     onSelectRole: handleSelectRole,
     bookingStep,
-    setBookingStep
+    setBookingStep,
+    userRole: authState.role,
+    onViewProduct: (p: Product) => { setSelectedProduct(p); setActiveTab('product-detail'); },
+    onGoToCheckout: () => {
+      if (!authState.userId) {
+        setShowAuth(true);
+      } else {
+        setActiveTab('checkout');
+      }
+    }
   };
 
   const content = (
@@ -95,7 +108,17 @@ const App: React.FC = () => {
           <Breadcrumbs activeTab={activeTab} selectedClinic={selectedClinic} selectedRoom={selectedRoom} selectedTech={selectedTech} onNavigate={setActiveTab} />
         </div>
       )}
-      <PageComponent {...pageProps} />
+      
+      {/* Explicit rendering for complex state routes if not defined in ROUTES map cleanly */}
+      {activeTab === 'product-detail' && selectedProduct ? (
+        <ProductDetail product={selectedProduct} onBack={() => setActiveTab('store')} onAddToCart={pageProps.onAddToCart} />
+      ) : activeTab === 'checkout' ? (
+        <Checkout cart={cart} onBack={() => setActiveTab('store')} onSuccess={() => setActiveTab('order-success')} />
+      ) : activeTab === 'order-success' ? (
+        <Confirmation onFinish={() => { setActiveTab('dashboard'); setCart([]); }} />
+      ) : (
+        <PageComponent {...pageProps} />
+      )}
     </div>
   );
 

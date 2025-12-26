@@ -1,4 +1,5 @@
 
+
 export enum UserRole {
   CUSTOMER = 'CUSTOMER',
   TECHNICIAN = 'TECHNICIAN',
@@ -7,21 +8,40 @@ export enum UserRole {
   SUPER_ADMIN = 'SUPER_ADMIN'
 }
 
+// Room interface for clinical spaces
+export interface Room {
+  id: string;
+  name: string;
+  pricePerHour: number;
+  features: string[];
+  image: string;
+  gallery: string[];
+  description: string;
+  isAvailable: boolean;
+  type?: string;
+}
+
+// SurgeryBooking interface for operational management
+export interface SurgeryBooking {
+  id: string;
+  roomId: string;
+  clinicId: string;
+  surgeonName: string;
+  patientName: string;
+  surgeryType: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
+  anesthesiaType?: 'LOCAL' | 'GENERAL';
+}
+
 export interface TimeSlot {
   id: string;
   day: string; 
   startTime: string;
   endTime: string;
   isBooked: boolean;
-}
-
-export interface SurgeryBooking extends Booking {
-  surgeonName: string;
-  assistantName?: string;
-  anesthesiaType: 'GENERAL' | 'LOCAL' | 'SEDATION';
-  patientAge: number;
-  equipmentNeeded: string[];
-  roomNumber: string;
 }
 
 export interface Booking {
@@ -73,27 +93,6 @@ export interface Technician {
   schedule?: TimeSlot[];
 }
 
-export interface Staff {
-  id: string;
-  name: string;
-  role: string;
-  specialty: string;
-  image: string;
-  isPlatformUser: boolean;
-}
-
-export interface Room {
-  id: string;
-  name: string;
-  pricePerHour: number;
-  features: string[];
-  image: string;
-  gallery: string[];
-  description: string;
-  isAvailable: boolean;
-  type?: 'GENERAL' | 'SURGERY' | 'CONSULTATION';
-}
-
 export interface Clinic {
   id: string;
   name: string;
@@ -101,10 +100,10 @@ export interface Clinic {
   rating: number;
   image: string;
   availableRoomsCount: number;
-  rooms: Room[];
+  rooms: Room[]; // Updated to use the Room interface
   services: string[];
   description: string;
-  staff: Staff[];
+  staff: any[];
   gallery: string[];
   address: string;
 }
@@ -114,12 +113,13 @@ export interface Product {
   name: string;
   brand: string;
   price: number;
-  category: 'EQUIPMENT' | 'CONSUMABLE' | 'FURNITURE' | 'SKINCARE';
+  category: 'EQUIPMENT' | 'CONSUMABLE' | 'FURNITURE' | 'SKINCARE' | 'AFTERCARE';
   image: string;
   description: string;
   specs: Record<string, string>;
   stock: number;
   isFeatured?: boolean;
+  gallery?: string[];
 }
 
 export interface CartItem {

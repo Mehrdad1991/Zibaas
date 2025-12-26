@@ -23,6 +23,9 @@ export type RoutePath =
   | 'dashboard' 
   | 'auth' 
   | 'store' 
+  | 'product-detail'
+  | 'checkout'
+  | 'order-success'
   | 'surgery' 
   | 'rental' 
   | 'analysis'
@@ -44,6 +47,9 @@ export const ROUTES: Record<RoutePath, RouteConfig> = {
   dashboard: { path: 'dashboard', component: DashboardPage, layout: 'dashboard' },
   auth: { path: 'auth', component: AuthPage, layout: 'none' },
   store: { path: 'store', component: StorePage, layout: 'main' },
+  'product-detail': { path: 'product-detail', component: () => null, layout: 'main' },
+  'checkout': { path: 'checkout', component: () => null, layout: 'main' },
+  'order-success': { path: 'order-success', component: () => null, layout: 'main' },
   surgery: { path: 'surgery', component: SurgeryPage, layout: 'main' },
   rental: { path: 'rental', component: RentalPage, layout: 'main' },
   analysis: { path: 'analysis', component: AnalysisPage, layout: 'main' },
