@@ -74,8 +74,8 @@ const App: React.FC = () => {
   };
 
   const renderHome = () => (
-    <div className="bg-gray-50 pb-32 overflow-x-hidden">
-      {/* 1. Quick Access (Circles) */}
+    <div className="bg-gray-50 pb-32 overflow-x-hidden animate-in fade-in duration-700">
+      {/* 1. Quick Access Categories */}
       <div className="bg-white px-2 py-6 md:py-10 border-b border-gray-100 mb-2 overflow-x-auto no-scrollbar">
         <div className="max-w-7xl mx-auto flex gap-6 md:gap-12 justify-start lg:justify-center px-4">
           {[
@@ -87,7 +87,7 @@ const App: React.FC = () => {
             { id: 'tech-directory', label: 'متخصصین', img: 'https://cdn-icons-png.flaticon.com/512/912/912318.png' },
           ].map(item => (
             <button key={item.id} onClick={() => setActiveTab(item.id as any)} className="flex flex-col items-center gap-3 shrink-0 group">
-              <div className="w-16 h-16 md:w-24 md:h-24 bg-gray-50 rounded-full flex items-center justify-center p-4 shadow-sm border border-gray-50 group-hover:border-pink-500 group-hover:bg-white group-hover:shadow-lg transition-all">
+              <div className="w-16 h-16 md:w-24 md:h-24 bg-gray-50 rounded-full flex items-center justify-center p-4 shadow-sm border border-gray-50 group-hover:border-pink-500 group-hover:bg-white group-hover:shadow-lg transition-all transform group-active:scale-90">
                 <img src={item.img} className="w-full h-full object-contain" alt={item.label} />
               </div>
               <span className="text-[10px] md:text-sm font-black text-gray-700 whitespace-nowrap">{item.label}</span>
@@ -96,19 +96,19 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Hero Banner */}
-      <div className="max-w-7xl mx-auto px-4 my-4">
-        <div className="relative rounded-[32px] overflow-hidden aspect-[16/9] md:aspect-[16/4] bg-gray-900 shadow-2xl group">
-          <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=1600" className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000" alt="Hero" />
+      {/* 2. Main Hero Banner */}
+      <div className="max-w-7xl mx-auto px-4 my-6">
+        <div className="relative rounded-[32px] md:rounded-[48px] overflow-hidden aspect-[16/9] md:aspect-[16/4.5] bg-gray-900 shadow-2xl group cursor-pointer">
+          <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=1600" className="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-[2000ms]" alt="Hero" />
           <div className="absolute inset-0 bg-gradient-to-l from-black/80 via-transparent to-transparent flex flex-col justify-center items-end px-8 md:px-24 text-white text-right">
-            <div className="bg-pink-600 px-4 py-1 rounded-full text-[10px] md:text-xs font-black uppercase mb-4 animate-pulse">Zibaas Premium</div>
+            <div className="bg-pink-600 px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase mb-4 animate-pulse">Zibaas Premium</div>
             <h1 className="text-2xl md:text-6xl font-black tracking-tighter leading-tight mb-6 drop-shadow-2xl">زیبایی هوشمند، <br/>انتخابی تخصصی</h1>
-            <button onClick={() => setActiveTab('analysis')} className="bg-white text-pink-600 px-8 py-3 md:py-4 rounded-2xl text-xs md:text-lg font-black hover:bg-pink-600 hover:text-white transition-all shadow-2xl transform hover:-translate-y-1">شروع آنالیز رایگان چهره</button>
+            <button onClick={(e) => { e.stopPropagation(); setActiveTab('analysis'); }} className="bg-white text-pink-600 px-8 py-3 md:py-4 rounded-2xl text-xs md:text-lg font-black hover:bg-pink-600 hover:text-white transition-all shadow-2xl transform hover:-translate-y-1">شروع آنالیز رایگان چهره</button>
           </div>
         </div>
       </div>
 
-      {/* 3. Amazing Offers (Refined High-Density Layout) */}
+      {/* 3. Amazing Offers Section */}
       <div className="max-w-7xl mx-auto px-0 md:px-4 mb-12">
         <div className="bg-pink-600 md:rounded-[40px] p-5 md:p-8 flex flex-col md:flex-row items-center gap-6">
           <div className="w-full md:w-52 flex md:flex-col items-center justify-between md:justify-center gap-4 text-center shrink-0">
@@ -116,7 +116,7 @@ const App: React.FC = () => {
                 <h3 className="text-white text-2xl md:text-3xl font-black leading-none italic">شگفت‌انگیز</h3>
                 <p className="text-pink-100 text-[10px] md:text-sm font-bold opacity-80">فقط برای امروز</p>
              </div>
-             <img src="https://cdn-icons-png.flaticon.com/512/4213/4213943.png" className="hidden md:block w-24 h-24 invert opacity-30 animate-bounce-slow" />
+             <img src="https://cdn-icons-png.flaticon.com/512/4213/4213943.png" className="hidden md:block w-24 h-24 invert opacity-30 animate-bounce" style={{animationDuration: '3s'}} />
              <div className="flex gap-2 text-white text-xs font-black bg-black/20 px-4 py-2 rounded-2xl backdrop-blur-md">
                 <span>{toPersianDigits('۱۲')}</span>:<span>{toPersianDigits('۴۵')}</span>:<span>{toPersianDigits('۰۸')}</span>
              </div>
@@ -126,7 +126,7 @@ const App: React.FC = () => {
             {MOCK_SERVICES.map(service => (
               <div 
                 key={service.id} 
-                className="min-w-[150px] md:min-w-[200px] bg-white rounded-[28px] p-3 md:p-4 flex flex-col gap-3 hover:shadow-2xl transition-all cursor-pointer group"
+                className="min-w-[160px] md:min-w-[210px] bg-white rounded-[28px] p-3 md:p-4 flex flex-col gap-3 hover:shadow-2xl transition-all cursor-pointer group"
                 onClick={() => setActiveTab('booking')}
               >
                 <div className="aspect-square rounded-[20px] overflow-hidden bg-gray-50">
@@ -153,36 +153,42 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      {/* 4. Promotional Banners (2-Column) */}
+      {/* 4. Two-Column Promo Banners */}
       <div className="max-w-7xl mx-auto px-4 mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="h-32 md:h-52 rounded-[32px] bg-gradient-to-br from-indigo-600 to-blue-700 p-6 md:p-10 flex items-center justify-between text-white shadow-xl cursor-pointer hover:scale-[1.02] transition-all overflow-hidden relative">
+        <div 
+          onClick={() => setActiveTab('surgery')}
+          className="h-36 md:h-56 rounded-[32px] bg-gradient-to-br from-indigo-600 to-blue-800 p-6 md:p-10 flex items-center justify-between text-white shadow-xl cursor-pointer hover:scale-[1.02] active:scale-95 transition-all overflow-hidden relative group"
+        >
            <div className="relative z-10 space-y-2 md:space-y-4">
               <h4 className="text-xl md:text-3xl font-black">رزرو آنی اتاق عمل</h4>
               <p className="text-[10px] md:text-sm font-medium opacity-80">ویژه جراحان و تکنسین‌های فریلنسر</p>
-              <button onClick={() => setActiveTab('surgery')} className="bg-white text-blue-700 px-5 py-2 rounded-xl text-[10px] md:text-xs font-black">اطلاعات بیشتر</button>
+              <span className="inline-block bg-white text-blue-700 px-5 py-2 rounded-xl text-[10px] md:text-xs font-black shadow-lg">اطلاعات بیشتر</span>
            </div>
-           <img src="https://cdn-icons-png.flaticon.com/512/2966/2966486.png" className="w-24 md:w-40 invert opacity-20 absolute -left-4 -bottom-4 rotate-12" />
+           <img src="https://cdn-icons-png.flaticon.com/512/2966/2966486.png" className="w-24 md:w-40 invert opacity-20 absolute -left-4 -bottom-4 rotate-12 group-hover:rotate-0 transition-transform duration-500" />
         </div>
-        <div className="h-32 md:h-52 rounded-[32px] bg-gradient-to-br from-pink-600 to-rose-700 p-6 md:p-10 flex items-center justify-between text-white shadow-xl cursor-pointer hover:scale-[1.02] transition-all overflow-hidden relative">
+        <div 
+          onClick={() => setActiveTab('store')}
+          className="h-36 md:h-56 rounded-[32px] bg-gradient-to-br from-pink-600 to-rose-800 p-6 md:p-10 flex items-center justify-between text-white shadow-xl cursor-pointer hover:scale-[1.02] active:scale-95 transition-all overflow-hidden relative group"
+        >
            <div className="relative z-10 space-y-2 md:space-y-4">
               <h4 className="text-xl md:text-3xl font-black">فروشگاه تجهیزات زیباست</h4>
               <p className="text-[10px] md:text-sm font-medium opacity-80">خرید نقد و اقساط انواع دستگاه‌ها</p>
-              <button onClick={() => setActiveTab('store')} className="bg-white text-pink-700 px-5 py-2 rounded-xl text-[10px] md:text-xs font-black">ورود به فروشگاه</button>
+              <span className="inline-block bg-white text-pink-700 px-5 py-2 rounded-xl text-[10px] md:text-xs font-black shadow-lg">ورود به فروشگاه</span>
            </div>
-           <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" className="w-24 md:w-40 invert opacity-20 absolute -left-4 -bottom-4 -rotate-12" />
+           <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" className="w-24 md:w-40 invert opacity-20 absolute -left-4 -bottom-4 -rotate-12 group-hover:rotate-0 transition-transform duration-500" />
         </div>
       </div>
 
-      {/* 5. Trust Indicators */}
-      <div className="max-w-7xl mx-auto px-4 mb-12">
-        <div className="bg-white rounded-[32px] border border-gray-100 p-6 md:p-10 grid grid-cols-3 gap-4 md:gap-10">
+      {/* 5. Trust Bar (Values) */}
+      <div className="max-w-7xl mx-auto px-4 mb-16">
+        <div className="bg-white rounded-[32px] border border-gray-100 p-8 md:p-12 grid grid-cols-3 gap-4 md:gap-12 shadow-sm">
            {[
              { t: 'پزشکان برتر', d: 'تایید شده و مجرب', i: '👨‍⚕️' },
              { t: 'پرداخت امن', d: 'گارانتی بازگشت وجه', i: '🛡️' },
              { t: 'پشتیبانی AI', d: 'پاسخگویی ۲۴ ساعته', i: '🤖' }
            ].map((item, i) => (
-             <div key={i} className="flex flex-col items-center text-center space-y-2 md:space-y-4">
-                <div className="text-3xl md:text-5xl">{item.i}</div>
+             <div key={i} className="flex flex-col items-center text-center space-y-3 md:space-y-5">
+                <div className="text-3xl md:text-6xl transform hover:scale-110 transition-transform">{item.i}</div>
                 <div className="space-y-1">
                   <h5 className="text-[11px] md:text-lg font-black text-gray-900">{item.t}</h5>
                   <p className="text-[8px] md:text-xs text-gray-400 font-bold">{item.d}</p>
@@ -192,22 +198,22 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      {/* 6. Top Clinics Grid (High Density) */}
+      {/* 6. Featured Clinics (High Density Grid) */}
       <div className="max-w-7xl mx-auto px-4 space-y-8">
         <div className="flex justify-between items-end px-1">
            <div className="space-y-1">
               <h3 className="text-xl md:text-3xl font-black text-gray-900 border-r-4 border-pink-600 pr-4">برترین کلینیک‌های جراحی</h3>
               <p className="text-[10px] md:text-sm text-gray-400 font-bold pr-5">پیشنهاد شده توسط دستیار هوشمند زیباست</p>
            </div>
-           <button onClick={() => setActiveTab('booking')} className="text-pink-600 text-xs md:text-sm font-black border-b-2 border-pink-100 pb-1">مشاهده همه</button>
+           <button onClick={() => setActiveTab('booking')} className="text-pink-600 text-xs md:text-sm font-black border-b-2 border-pink-100 pb-1 hover:border-pink-600 transition-all">مشاهده همه</button>
         </div>
         
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
           {MOCK_CLINICS.map(clinic => (
             <div 
               key={clinic.id} 
-              onClick={() => { setSelectedClinic(clinic); setActiveTab('clinic'); window.scrollTo(0,0); }}
-              className="bg-white border border-gray-100 rounded-[28px] md:rounded-[40px] overflow-hidden shadow-sm hover:shadow-2xl transition-all group flex flex-col"
+              onClick={() => { setSelectedClinic(clinic); setActiveTab('clinic'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+              className="bg-white border border-gray-100 rounded-[28px] md:rounded-[40px] overflow-hidden shadow-sm hover:shadow-2xl transition-all group flex flex-col transform hover:-translate-y-2"
             >
               <div className="aspect-[4/3] relative overflow-hidden">
                 <img src={clinic.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt={clinic.name} />
@@ -216,8 +222,8 @@ const App: React.FC = () => {
                    <span>★</span>
                 </div>
               </div>
-              <div className="p-4 md:p-6 flex-1 flex flex-col gap-2 text-right">
-                <h4 className="text-[12px] md:text-xl font-black text-gray-900 line-clamp-1">{clinic.name}</h4>
+              <div className="p-4 md:p-7 flex-1 flex flex-col gap-2 text-right">
+                <h4 className="text-[12px] md:text-xl font-black text-gray-900 line-clamp-1 group-hover:text-pink-600 transition-colors">{clinic.name}</h4>
                 <div className="flex items-center gap-1 justify-end text-[10px] md:text-sm text-gray-400 font-bold">
                    <span>{clinic.location}</span>
                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 md:h-4 md:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -228,7 +234,7 @@ const App: React.FC = () => {
                    <span className="text-[10px] md:text-xs font-black text-pink-600 bg-pink-50 px-3 py-1 rounded-lg">رزرو فوری</span>
                    <div className="flex -space-x-2 rtl:space-x-reverse">
                       {clinic.staff.slice(0, 2).map(s => (
-                        <img key={s.id} src={s.image} className="w-6 h-6 md:w-10 md:h-10 rounded-full border-2 border-white object-cover shadow-sm" />
+                        <img key={s.id} src={s.image} className="w-7 h-7 md:w-11 md:h-11 rounded-full border-2 border-white object-cover shadow-sm" />
                       ))}
                    </div>
                 </div>
@@ -310,10 +316,12 @@ const App: React.FC = () => {
             {activeTab === 'booking' && <UnifiedBooking onSelectClinic={c => { setSelectedClinic(c); setActiveTab('clinic'); }} onSelectTech={setSelectedTech} />}
             {activeTab === 'store' && <Store cart={cart} onAddToCart={handleAddToCart} onUpdateQuantity={updateCartQuantity} />}
             {activeTab === 'surgery' && <SurgicalBooking />}
-            {activeTab === 'rental' && <RoomRental onViewRoomDetail={setSelectedRoom} userRole={user?.role || UserRole.CUSTOMER} isVerified={true} />}
+            {activeTab === 'rental' && <RoomRental onViewRoomDetail={(r, c) => { setSelectedRoom(r); setSelectedClinic(c); setActiveTab('room-detail'); }} userRole={user?.role || UserRole.CUSTOMER} isVerified={true} />}
+            {activeTab === 'room-detail' && selectedRoom && selectedClinic && <RoomDetail room={selectedRoom} clinic={selectedClinic} onBack={() => setActiveTab('rental')} onBook={() => {}} />}
             {activeTab === 'dashboard' && renderDashboard()}
             {activeTab === 'clinic' && selectedClinic && <ClinicProfile clinic={selectedClinic} onBack={() => setActiveTab('booking')} onBookService={s => { setServiceToBook(s); setProviderToBook(selectedClinic); setIsBookingModalOpen(true); }} />}
             {activeTab === 'tech-profile' && selectedTech && <TechnicianProfile technician={selectedTech} onBack={() => setActiveTab('booking')} onBookService={s => { setServiceToBook(s); setProviderToBook(selectedTech); setIsBookingModalOpen(true); }} />}
+            {activeTab === 'tech-directory' && <TechnicianDirectory onSelectTechnician={(t) => { setSelectedTech(t); setActiveTab('tech-profile'); }} />}
             {activeTab === 'analysis' && <BeforeAfterAnalysis />}
           </div>
         )}
